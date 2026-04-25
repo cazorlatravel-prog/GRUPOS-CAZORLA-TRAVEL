@@ -1,0 +1,30 @@
+<?php
+/**
+ * CAZORLA PLANNING — Configuración del backend
+ *
+ * Renombra este archivo a `config.php` en el servidor (NO lo subas a git).
+ * Si `config.php` no existe, api.php usa los valores embebidos por compatibilidad,
+ * pero se RECOMIENDA encarecidamente crear este archivo y rotar la contraseña.
+ */
+
+// Credenciales MySQL (Hostinger)
+$DB_HOST = 'localhost';
+$DB_NAME = 'u919343704_cazorla_planni';
+$DB_USER = 'u919343704_info';
+$DB_PASS = 'CAMBIAR_POR_TU_CONTRASEÑA';   // ⚠️ rota la actual en hPanel y pega la nueva aquí
+
+// Token compartido para escritura (deja '' para desactivar autenticación).
+// Si lo activas, la app pedirá el token en el modal de Ajustes (se guarda en
+// localStorage del navegador). Útil para evitar que un curioso con la URL
+// pueda sobrescribir los datos.
+$API_TOKEN = '';
+
+// Orígenes CORS permitidos. Usa ['*'] para abrir, o lista tus dominios.
+// Ej: ['https://tudominio.com', 'https://www.tudominio.com']
+$ALLOWED_ORIGINS = ['*'];
+
+// Tamaño máximo de payload en bytes (5 MB por defecto).
+$MAX_DATA_BYTES = 5 * 1024 * 1024;
+
+// Cuántas copias automáticas conservar.
+$KEEP_BACKUPS = 50;

@@ -1,0 +1,12 @@
+# Configuración con secretos: NO se sube nunca
+app/config.php
+
+# Workspace temporal de extracción
+extracted/
+
+# OS / editores
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
