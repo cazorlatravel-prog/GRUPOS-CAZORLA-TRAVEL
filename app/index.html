@@ -732,7 +732,7 @@ textarea { resize: vertical; min-height: 48px }
 .fab:active { transform: scale(.92) }
 
 /* ═══ MOBILE TOPBAR ═══ */
-.hide-mobile { display: flex }
+/* .hide-mobile keeps its native display on desktop (no override) */
 .show-mobile { display: none }
 
 /* ═══ SKELETON LOADING ═══ */
@@ -772,10 +772,13 @@ textarea { resize: vertical; min-height: 48px }
 
   /* Filter bar: más aire, ocultar tabs de vista (van a bnav) */
   .fbar { padding: 10px 12px }
+  .fbar-in { gap: 8px; flex-wrap: wrap }
   .fbar .tabs.view-tabs { display: none }
+  .search-box { flex: 1 1 100%; order: 99 }
   .search-box input { width: 100%; min-height: 40px; font-size: 13px; padding: 10px 12px 10px 32px }
   .search-box input:focus { width: 100% }
-  .search-box { flex: 1 }
+  .search-box::before { font-size: 13px; left: 11px }
+  .fbar .tabs:first-child { flex: 1 1 auto }
 
   /* KPIs más compactos pero legibles */
   .kpis { gap: 6px; margin-bottom: 12px }
@@ -800,10 +803,6 @@ textarea { resize: vertical; min-height: 48px }
     border-left: 4px solid var(--mint); border-right: none;
     border-radius: 12px; padding: 12px 14px;
     box-shadow: var(--sh); margin-top: 4px;
-  }
-  .wk-name::before {
-    content: '👥 ' attr(data-students); display: block;
-    font-size: 11px; color: var(--tx3); font-weight: 600; margin-top: 2px;
   }
   .wk-name .n { font-size: 15px; white-space: normal }
   .wk-name .s { font-size: 12px }
@@ -931,7 +930,7 @@ textarea { resize: vertical; min-height: 48px }
   .logo-leaf { font-size: 22px }
   .top-r { gap: 4px }
 
-  .ti { width: 42px; height: 42px; font-size: 17px }
+  .ti { width: 44px; height: 44px; font-size: 17px }
   .sync-pill { padding: 5px 8px; font-size: 9px }
   .sync-pill .sync-dot { width: 5px; height: 5px }
 
