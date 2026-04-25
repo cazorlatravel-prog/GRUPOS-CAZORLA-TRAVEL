@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Cazorla Planning 2026</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 <link rel="manifest" href="manifest.json">
@@ -679,6 +679,284 @@ textarea { resize: vertical; min-height: 48px }
 .tip-text code{background:var(--bg2);padding:1px 5px;border-radius:4px;font-family:ui-monospace,monospace;font-size:10px}
 .danger-banner{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:8px 12px;border-radius:8px;font-size:11px;font-weight:600;margin-bottom:10px}
 
+/* ═══════════════════════════════════════════
+   MOBILE DESIGN v2 — Safe areas, bottom nav,
+   FAB, bottom sheets, larger touch targets,
+   vertical Planning, haptic feedback.
+   ═══════════════════════════════════════════ */
+
+/* Safe-area insets (notch / Dynamic Island / home bar) */
+.top { padding-top: env(safe-area-inset-top); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)) }
+.detail-head { padding-top: max(12px, calc(12px + env(safe-area-inset-top))) }
+.install-banner { padding-bottom: calc(14px + env(safe-area-inset-bottom)); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)) }
+.save-bar-wrap { padding-bottom: env(safe-area-inset-bottom) }
+
+/* ═══ BOTTOM NAVIGATION (mobile only) ═══ */
+.bnav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--card); border-top: 1px solid var(--bdr);
+  padding: 4px env(safe-area-inset-right) calc(4px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+  z-index: 95; box-shadow: 0 -2px 14px rgba(0,0,0,.06);
+}
+.bnav-btn {
+  flex: 1; border: none; background: transparent;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  padding: 6px 4px 4px; font-size: 10px; font-weight: 600;
+  color: var(--tx3); min-height: 54px; transition: color .15s;
+  border-radius: 10px; position: relative;
+}
+.bnav-btn .ic { font-size: 22px; line-height: 1; transition: transform .2s }
+.bnav-btn.on { color: var(--forest) }
+.bnav-btn.on .ic { transform: scale(1.1) }
+.bnav-btn.on::before {
+  content: ''; position: absolute; top: 4px; left: 50%;
+  transform: translateX(-50%); width: 28px; height: 3px;
+  background: var(--mint); border-radius: 2px;
+}
+
+/* ═══ FAB ═══ */
+.fab {
+  display: none;
+  position: fixed; right: 16px;
+  bottom: calc(74px + env(safe-area-inset-bottom));
+  width: 56px; height: 56px; border-radius: 28px;
+  background: var(--mint); color: #fff; border: none;
+  box-shadow: 0 6px 20px rgba(46,160,85,.4), 0 2px 6px rgba(0,0,0,.1);
+  font-size: 30px; font-weight: 300; line-height: 1; z-index: 94;
+  cursor: pointer;
+  transition: transform .15s cubic-bezier(.4,0,.2,1);
+  align-items: center; justify-content: center;
+  padding: 0;
+}
+.fab:active { transform: scale(.92) }
+
+/* ═══ MOBILE TOPBAR ═══ */
+.hide-mobile { display: flex }
+.show-mobile { display: none }
+
+/* ═══ SKELETON LOADING ═══ */
+.skel {
+  background: linear-gradient(90deg, var(--bg2) 0%, var(--bdr) 50%, var(--bg2) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--r);
+}
+@keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
+.skel-card { height: 70px }
+.skel-list { display: flex; flex-direction: column; gap: 8px; padding: 14px; max-width: 700px; margin: 0 auto; width: 100% }
+
+/* Spinner */
+.spin-inline { display: inline-block; width: 12px; height: 12px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin .7s linear infinite; margin-right: 6px; vertical-align: -2px }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MEDIA QUERIES — Mobile (<= 768px)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Tap targets ≥ 44px */
+  .ti { width: 44px; height: 44px; font-size: 18px; border-radius: 12px }
+  .modal-x, .detail-close { width: 44px; height: 44px; font-size: 18px }
+  .nav-btn { width: 44px; height: 44px; font-size: 16px }
+  .act-btn { width: 40px; height: 40px; font-size: 13px; border-radius: 10px }
+  .save-btn { min-height: 44px; padding: 10px 18px; font-size: 13px }
+  .btn { min-height: 42px; padding: 10px 16px; font-size: 12px }
+  .tab { min-height: 38px; padding: 8px 14px; font-size: 12px }
+  .tt { padding: 10px 14px; font-size: 12px; min-height: 40px }
+  .login-input, .login-btn { min-height: 50px }
+
+  /* Topbar: ocultar secundarios, mostrar ☰ Más */
+  .ti.hide-mobile, .tt-g.hide-mobile, .last-saved { display: none !important }
+  .ti.show-mobile { display: flex !important }
+  .top-r { gap: 6px }
+  .sync-pill { padding: 6px 10px; font-size: 10px }
+
+  /* Filter bar: más aire, ocultar tabs de vista (van a bnav) */
+  .fbar { padding: 10px 12px }
+  .fbar .tabs.view-tabs { display: none }
+  .search-box input { width: 100%; min-height: 40px; font-size: 13px; padding: 10px 12px 10px 32px }
+  .search-box input:focus { width: 100% }
+  .search-box { flex: 1 }
+
+  /* KPIs más compactos pero legibles */
+  .kpis { gap: 6px; margin-bottom: 12px }
+  .kpi { padding: 12px 14px; flex: 1; min-width: 0 }
+  .kpi-icon { font-size: 22px }
+  .kpi-val { font-size: 22px }
+  .kpi-lbl { font-size: 9px }
+
+  /* Cards más respirables */
+  .card-row { padding: 16px; gap: 14px; border-radius: 14px }
+  .card-row h3 { font-size: 15px }
+  .card-row .sub { font-size: 12px; margin-top: 3px }
+  .card-dot { width: 5px }
+  .card-arrow { font-size: 22px }
+
+  /* PLANNING: convertir grid horizontal en lista vertical agrupada */
+  .wk-wrap { overflow-x: visible; padding: 0 }
+  .wk { display: flex; flex-direction: column; gap: 8px; background: transparent; box-shadow: none; min-width: 0; width: 100%; border-radius: 0 }
+  .wk-corner, .wk-dh { display: none }
+  .wk-name {
+    background: var(--card); border: 1px solid var(--bdr);
+    border-left: 4px solid var(--mint); border-right: none;
+    border-radius: 12px; padding: 12px 14px;
+    box-shadow: var(--sh); margin-top: 4px;
+  }
+  .wk-name::before {
+    content: '👥 ' attr(data-students); display: block;
+    font-size: 11px; color: var(--tx3); font-weight: 600; margin-top: 2px;
+  }
+  .wk-name .n { font-size: 15px; white-space: normal }
+  .wk-name .s { font-size: 12px }
+  .wk-name .info { font-size: 11px }
+  .wk-cell {
+    background: var(--card); border: 1px solid var(--bdr);
+    border-radius: 10px; padding: 10px 12px;
+    min-height: auto; gap: 5px;
+    margin-left: 14px;
+  }
+  .wk-cell.off { display: none }
+  .wk-cell::before {
+    content: attr(data-day); display: block;
+    font-size: 10px; font-weight: 700; color: var(--forest);
+    text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px;
+  }
+
+  /* Chips más legibles en mobile */
+  .chip-w { border-radius: 10px }
+  .chip { padding: 8px 12px; font-size: 13px; min-height: 38px; gap: 6px; cursor: pointer }
+  .chip-icon { font-size: 16px }
+  .chip-time { font-size: 10px; padding: 2px 6px }
+  .chip-mons { font-size: 10px; max-width: 80px }
+  .chip-arrows { opacity: 1; flex-direction: row }
+  .chip-mv { min-width: 32px; min-height: 28px; font-size: 11px }
+  .chip-x { opacity: 1; min-width: 36px; font-size: 12px; padding: 0 10px }
+
+  .add-slot { padding: 10px; font-size: 12px; min-height: 40px; border-radius: 10px }
+
+  /* MES: celdas más altas */
+  .month-cell { min-height: 70px; padding: 4px 3px }
+  .month-d { font-size: 12px; margin-bottom: 3px }
+  .month-bar { font-size: 9px; padding: 3px 4px; min-height: 18px; line-height: 1.25; border-radius: 5px; margin-bottom: 2px }
+  .month-hdr { padding: 8px 2px; font-size: 10px }
+
+  /* Activity rows: más amplios */
+  .act-row { padding: 14px; gap: 12px; border-radius: 14px }
+  .act-icon { width: 40px; height: 40px; font-size: 18px; border-radius: 12px }
+  .act-name { font-size: 14px }
+  .act-btns { opacity: 1; gap: 4px }
+
+  /* MODALES → Bottom Sheets */
+  .overlay { padding: 0; align-items: flex-end }
+  .modal {
+    max-height: 92dvh; max-width: 100% !important;
+    border-radius: 20px 20px 0 0;
+    animation: slideUp .25s cubic-bezier(.4,0,.2,1);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .modal-head {
+    padding-top: 22px; position: relative;
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-head::before {
+    content: ''; position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%); width: 40px; height: 4px;
+    background: var(--bdr2); border-radius: 2px;
+  }
+  .modal-head h3 { font-size: 17px }
+  .modal-body { padding: 14px 18px 18px }
+  .modal-foot {
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+    position: sticky; bottom: 0; background: var(--card);
+    box-shadow: 0 -2px 8px rgba(0,0,0,.04);
+  }
+
+  /* Picker grid 2 cols en mobile */
+  .pick-grid { grid-template-columns: 1fr 1fr; gap: 6px }
+  .pick-item { padding: 10px; min-height: 50px }
+  .pick-dot { width: 28px; height: 28px; font-size: 14px }
+  .pick-label { font-size: 12px }
+  .pick-time { width: 60px; min-height: 32px; font-size: 11px }
+
+  /* Day block en detail */
+  .day-num { font-size: 28px }
+  .day-name { font-size: 11px }
+  .day-block { margin: 0 12px 18px }
+  .day-header { top: calc(56px + env(safe-area-inset-top)) }
+
+  /* Detail header con safe area */
+  .detail-meta { padding: 14px 16px }
+  .detail-meta p { font-size: 13px; line-height: 1.65 }
+
+  /* Mostrar bottom nav y FAB en mobile */
+  .bnav { display: flex }
+  .fab { display: flex }
+
+  /* Hueco inferior para no tapar contenido tras bnav */
+  .main { padding-bottom: calc(80px + env(safe-area-inset-bottom)) }
+  .save-bar-wrap { top: calc(54px + env(safe-area-inset-top)) }
+  .fbar { top: calc(54px + env(safe-area-inset-top)) }
+
+  /* :active feedback (sustituto haptic) */
+  .ti:active, .tt:active, .tab:active, .nav-btn:active,
+  .act-btn:active, .modal-x:active, .btn:active,
+  .bnav-btn:active, .save-btn:active, .pick-item:active,
+  .chip-mv:active, .chip-x:active, .add-slot:active,
+  .add-act-btn:active, .detail-close:active {
+    transform: scale(.94);
+    transition: transform .08s;
+  }
+  .card-row:active { transform: scale(.985); background: var(--bg) }
+  .act-row:active { background: var(--forest-l) }
+  .chip:active { filter: brightness(.92) }
+  .month-bar:active { transform: scale(.92) }
+
+  /* Mons toggle más amplio */
+  .mons-toggle label { font-size: 13px; padding: 6px 0 }
+  .toggle-switch { width: 42px; height: 24px; border-radius: 12px }
+  .toggle-switch::after { width: 20px; height: 20px }
+  .toggle-switch.on::after { left: 20px }
+
+  /* Búsqueda en card view */
+  .empty-state { padding: 40px 20px }
+  .empty-state .es-icon { font-size: 42px }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MEDIA QUERIES — Phones pequeños (<= 480px)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .top-in { height: 52px }
+  .logo { font-size: 15px; gap: 5px }
+  .logo small { display: none }
+  .logo-leaf { font-size: 22px }
+  .top-r { gap: 4px }
+
+  .ti { width: 42px; height: 42px; font-size: 17px }
+  .sync-pill { padding: 5px 8px; font-size: 9px }
+  .sync-pill .sync-dot { width: 5px; height: 5px }
+
+  .kpis { gap: 5px }
+  .kpi { padding: 10px 12px; gap: 8px }
+  .kpi-icon { font-size: 18px }
+  .kpi-val { font-size: 18px }
+
+  .month-cell { min-height: 60px; padding: 3px 2px }
+  .month-bar { font-size: 8px }
+
+  .fab { width: 52px; height: 52px; font-size: 28px; bottom: calc(70px + env(safe-area-inset-bottom)) }
+
+  .bnav-btn { font-size: 9px }
+  .bnav-btn .ic { font-size: 20px }
+}
+
+/* Touch device global tweaks */
+@media (hover: none) and (pointer: coarse) {
+  .act-btns, .chip-arrows, .chip-x { opacity: 1 !important }
+  .chip-w:hover { transform: none; box-shadow: none }
+  .card-row:hover { box-shadow: none }
+  .act-row:hover { box-shadow: none }
+}
+
 </style>
 </head>
 <body>
@@ -696,6 +974,7 @@ const LS_TOKEN='cazorla_api_token';
 const cacheLocal=d=>{try{localStorage.setItem(LS_DATA,JSON.stringify(d));localStorage.setItem(LS_TS,new Date().toISOString())}catch{}};
 const readLocal=()=>{try{const d=localStorage.getItem(LS_DATA);const t=localStorage.getItem(LS_TS);if(d)return{data:JSON.parse(d),ts:t}}catch{}return null};
 const apiHeaders=()=>{const o={'Content-Type':'application/json'};const t=localStorage.getItem(LS_TOKEN);if(t)o['X-Api-Token']=t;return o};
+const CAN_DRAG=typeof window!=='undefined'&&window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine)').matches;
 
 const CAT=[
 {k:"desayuno",l:"Desayuno",i:"☀️",c:"#e67700",g:"comida"},{k:"almuerzo",l:"Almuerzo",i:"🍴",c:"#d9480f",g:"comida"},
@@ -866,7 +1145,7 @@ function CardDetail({g,ro,onClose,onEdit,setPk,mA,rA,uA,setEa,showMons}){
         acts.map((a,i)=>{const c=CM[a.type];if(!c)return null;
           const isDragging=dragId===a.id;const isOver=overAct===a.id;
           return h('div',{key:a.id,className:'act-row'+(isDragging?' dragging':'')+(isOver?' drag-over':''),
-            draggable:!ro,
+            draggable:!ro&&CAN_DRAG,
             onDragStart:e=>{e.dataTransfer.effectAllowed='move';handleDragStart(a.id,day.str)},
             onDragOver:e=>handleDragOver(e,a.id),
             onDragLeave:()=>setOverAct(null),
@@ -936,6 +1215,19 @@ function SettingsModal({onClose}){
     h('div',{className:'modal-foot'},h('div',{style:{flex:1}}),h('button',{className:'btn',onClick:onClose},'Cancelar'),h('button',{className:'btn btn-green',onClick:save},'Guardar'))));
 }
 
+// ═══ MORE SHEET (mobile overflow menu) ═══
+function MoreSheet({onClose,actions}){
+  return h('div',{className:'overlay',onClick:onClose},h('div',{className:'modal',onClick:e=>e.stopPropagation(),style:{maxWidth:480}},
+    h('div',{className:'modal-head'},h('h3',null,'Acciones'),h('button',{className:'modal-x',onClick:onClose},'✕')),
+    h('div',{className:'modal-body',style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},
+      actions.map(a=>a&&h('button',{
+        key:a.label,
+        className:'btn',
+        onClick:()=>{onClose();a.onClick()},
+        style:{flexDirection:'column',gap:4,padding:'14px 8px',minHeight:80,fontSize:12,fontWeight:600}
+      },h('span',{style:{fontSize:24}},a.icon),a.label)))));
+}
+
 // ═══ MAIN APP ═══
 function App({role}){
   const ro=role==='viewer';
@@ -947,6 +1239,7 @@ function App({role}){
   const doInstall=async()=>{if(!installPrompt)return;installPrompt.prompt();const r=await installPrompt.userChoice;if(r.outcome==='accepted'){setCanInstall(false);setInstallPrompt(null)}};const[syncSt,sSs]=useState('saved');
   const[saveErr,setSaveErr]=useState(null);
   const[showBackups,setShowBackups]=useState(false);const[showSettings,setShowSettings]=useState(false);
+  const[showMore,setShowMore]=useState(false);
   const savedSnap=useRef(null);const lastUp=useRef("");const pollSkip=useRef(false);
   const importRef=useRef(null);
 
@@ -1047,9 +1340,11 @@ function App({role}){
   const oDE=(e,gid,d)=>{if(ro)return;e.preventDefault();sDrk(`${gid}-${d}`)};
   const oDR=(e,tg,td)=>{if(ro)return;e.preventDefault();sDrk(null);if(!drg)return;const{gid:sg,ds:sd,aid}=drg;sG(p=>{const ng=p.map(g=>({...g,activities:{...g.activities}}));const s=ng.find(g=>g.id===sg);const t=ng.find(g=>g.id===tg);if(!s||!t)return p;const sa=[...(s.activities[sd]||[])];const ai=sa.findIndex(x=>x.id===aid);if(ai===-1)return p;const[act]=sa.splice(ai,1);s.activities[sd]=sa;t.activities[td]=[...(t.activities[td]||[]),act];return ng});sDrg(null)};
 
-  const chip=(act,gid,d,idx,tot)=>{const c=CM[act.type];if(!c)return null;return h('div',{key:act.id,className:'chip-w',style:{background:c.c}},h('div',{className:'chip',draggable:!ro,onDragStart:e=>oDS(e,gid,d,act.id),onDoubleClick:e=>{e.stopPropagation();sEa({gid,ds:d,act})}},h('span',{className:'chip-icon'},c.i),act.time&&h('span',{className:'chip-time'},act.time),h('span',{className:'chip-label'},act.label),si&&act.monitors&&h('span',{className:'chip-mons'},'👤',act.monitors)),!ro&&h('div',{className:'chip-arrows'},h('button',{className:'chip-mv',disabled:idx===0,onClick:e=>{e.stopPropagation();mA(gid,d,act.id,-1)}},'▲'),h('button',{className:'chip-mv',disabled:idx>=tot-1,onClick:e=>{e.stopPropagation();mA(gid,d,act.id,1)}},'▼')),!ro&&h('button',{className:'chip-x',onClick:e=>{e.stopPropagation();rA(gid,d,act.id)}},'✕'))};
+  const chip=(act,gid,d,idx,tot)=>{const c=CM[act.type];if(!c)return null;return h('div',{key:act.id,className:'chip-w',style:{background:c.c}},h('div',{className:'chip',draggable:!ro&&CAN_DRAG,onDragStart:e=>oDS(e,gid,d,act.id),onClick:e=>{e.stopPropagation();sEa({gid,ds:d,act})}},h('span',{className:'chip-icon'},c.i),act.time&&h('span',{className:'chip-time'},act.time),h('span',{className:'chip-label'},act.label),si&&act.monitors&&h('span',{className:'chip-mons'},'👤',act.monitors)),!ro&&h('div',{className:'chip-arrows'},h('button',{className:'chip-mv',disabled:idx===0,onClick:e=>{e.stopPropagation();mA(gid,d,act.id,-1)}},'▲'),h('button',{className:'chip-mv',disabled:idx>=tot-1,onClick:e=>{e.stopPropagation();mA(gid,d,act.id,1)}},'▼')),!ro&&h('button',{className:'chip-x',onClick:e=>{e.stopPropagation();rA(gid,d,act.id)}},'✕'))};
 
-  if(ld)return h('div',{style:{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh'}},h('div',{style:{textAlign:'center'}},h('div',{style:{fontSize:42}},'🌿'),h('div',{style:{color:'var(--tx3)',fontSize:13,marginTop:8}},'Cargando…')));
+  if(ld)return h('div',{className:'shell'},
+    h('div',{className:'top'},h('div',{className:'top-in'},h('div',{className:'logo'},h('span',{className:'logo-leaf'},'🌿'),'Cazorla',h('small',null,'2026')))),
+    h('div',{className:'skel-list'},Array.from({length:6},(_,i)=>h('div',{key:i,className:'skel skel-card'}))));
 
   const ocData=oc?G.find(g=>g.id===oc):null;
   const syncCls=syncSt==='saved'?'sync-saved':syncSt==='unsaved'?'sync-unsaved':syncSt==='saving'?'sync-saving':'sync-err';
@@ -1063,22 +1358,23 @@ function App({role}){
         lastUp.current&&h('span',{className:'last-saved',title:'Última sincronización con el servidor'},'⏱ '+lastUp.current.slice(11,16)),
         h('div',{className:'sync-pill '+syncCls,title:saveErr||''},h('span',{className:'sync-dot'}),syncTxt),
         ro&&h('span',{className:'ro-badge'},'🔒 Solo lectura'),
-        !ro&&h('button',{className:'tt tt-g',onClick:()=>sGM('new')},'+ Colegio'),
-        h('button',{className:'ti'+(si?' on':''),onClick:()=>sSi(!si),title:'Ver detalles'},'👁'),
-        h('button',{className:'ti',onClick:()=>{if(vw==='week')xpdf('pdf-wk','Planning_'+wl);else if(vw==='month')xpdf('pdf-mo',MN[cm.m])},title:'PDF'},'📄'),
-        h('button',{className:'ti',onClick:()=>exportJSON(G),title:'Exportar copia local (JSON)'},'⬇'),
-        !ro&&h('button',{className:'ti',onClick:()=>importRef.current?.click(),title:'Importar JSON'},'⬆'),
+        !ro&&h('button',{className:'tt tt-g hide-mobile',onClick:()=>sGM('new')},'+ Colegio'),
+        h('button',{className:'ti hide-mobile'+(si?' on':''),onClick:()=>sSi(!si),title:'Ver detalles'},'👁'),
+        h('button',{className:'ti hide-mobile',onClick:()=>{if(vw==='week')xpdf('pdf-wk','Planning_'+wl);else if(vw==='month')xpdf('pdf-mo',MN[cm.m])},title:'PDF'},'📄'),
+        h('button',{className:'ti hide-mobile',onClick:()=>exportJSON(G),title:'Exportar copia local (JSON)'},'⬇'),
+        !ro&&h('button',{className:'ti hide-mobile',onClick:()=>importRef.current?.click(),title:'Importar JSON'},'⬆'),
         h('input',{ref:importRef,type:'file',accept:'application/json',style:{display:'none'},onChange:e=>{const f=e.target.files?.[0];if(f)doImport(f);e.target.value=''}}),
-        h('button',{className:'ti',onClick:()=>setShowBackups(true),title:'Historial de copias'},'🗂'),
-        h('button',{className:'ti',onClick:()=>setShowSettings(true),title:'Ajustes'},'⚙'),
-        h('button',{className:'ti',onClick:()=>{if(dirty&&!confirm('Tienes cambios sin guardar. ¿Salir igualmente?'))return;sessionStorage.removeItem('cazorla_role');location.reload()},title:'Salir'},'🚪')))),
+        h('button',{className:'ti hide-mobile',onClick:()=>setShowBackups(true),title:'Historial de copias'},'🗂'),
+        h('button',{className:'ti hide-mobile',onClick:()=>setShowSettings(true),title:'Ajustes'},'⚙'),
+        h('button',{className:'ti hide-mobile',onClick:()=>{if(dirty&&!confirm('Tienes cambios sin guardar. ¿Salir igualmente?'))return;sessionStorage.removeItem('cazorla_role');location.reload()},title:'Salir'},'🚪'),
+        h('button',{className:'ti show-mobile',onClick:()=>setShowMore(true),title:'Más'},'☰')))),
 
     // FILTER BAR
     h('div',{className:'fbar'},h('div',{className:'fbar-in'},
       h('div',{className:'tabs'},["TODOS","ABRIL","MAYO","JUNIO"].map(m=>h('button',{key:m,className:'tab'+(fM===m?' on':''),onClick:()=>{sFM(m);if(m!=='TODOS'){const mm={ABRIL:3,MAYO:4,JUNIO:5};const firstDay=new Date(2026,mm[m],1);sCw(fmt(getMon(firstDay)));sCm({y:2026,m:mm[m]})}}},m==="TODOS"?"Todos":m[0]+m.slice(1).toLowerCase()))),
       h('div',{className:'search-box'},h('input',{placeholder:'Buscar…',value:fS,onChange:e=>sFS(e.target.value)})),
       h('div',{className:'spacer'}),
-      h('div',{className:'tabs'},
+      h('div',{className:'tabs view-tabs'},
         h('button',{className:'tab'+(vw==='cards'?' on':''),onClick:()=>sVw('cards')},'Fichas'),
         h('button',{className:'tab'+(vw==='week'?' on':''),onClick:()=>sVw('week')},'Planning'),
         h('button',{className:'tab'+(vw==='month'?' on':''),onClick:()=>sVw('month')},'Mes')),
@@ -1114,9 +1410,10 @@ function App({role}){
           h('div',{className:'wk-corner'},h('span',null,'Colegio')),
           wd.map(w=>h('div',{key:w.str,className:'wk-dh'+(w.dow===0||w.dow===6?' we':'')},h('div',{className:'d-day'},DN[w.dow]),h('div',{className:'d-num'},w.dn),h('div',{className:'d-mon'},MN[w.mi].slice(0,3)))),
           wg.map(g=>h(F,{key:g.id},
-            h('div',{className:'wk-name',onClick:()=>sGM(g)},h('div',{className:'n'},g.name),h('div',{className:'s'},'👥 ',g.numKids||'?'),si&&h('div',{className:'info'},g.monitors&&h('div',{className:'info-m'},'👤 ',g.monitors),g.notes&&h('div',{className:'info-n'},'📝 ',g.notes))),
+            h('div',{className:'wk-name','data-students':g.numKids||'?',onClick:()=>sOc(g.id)},h('div',{className:'n'},g.name),h('div',{className:'s'},'👥 ',g.numKids||'?'),si&&h('div',{className:'info'},g.monitors&&h('div',{className:'info-m'},'👤 ',g.monitors),g.notes&&h('div',{className:'info-n'},'📝 ',g.notes))),
             wd.map(w=>{const ia=w.str>=g.startDate&&w.str<=g.endDate;const acts=g.activities[w.str]||[];const dky=`${g.id}-${w.str}`;
-              return h('div',{key:w.str,className:'wk-cell'+(ia?'':' off')+(drk===dky?' drop':''),onDragOver:oDO,onDragEnter:e=>ia&&oDE(e,g.id,w.str),onDragLeave:oDL,onDrop:e=>ia&&oDR(e,g.id,w.str)},
+              const dayLabel=DN[w.dow]+' '+w.dn+' '+MN[w.mi].slice(0,3);
+              return h('div',{key:w.str,className:'wk-cell'+(ia?'':' off')+(drk===dky?' drop':''),'data-day':dayLabel,onDragOver:oDO,onDragEnter:e=>ia&&oDE(e,g.id,w.str),onDragLeave:oDL,onDrop:e=>ia&&oDR(e,g.id,w.str)},
                 acts.map((a,i)=>chip(a,g.id,w.str,i,acts.length)),ia&&!ro&&h('div',{className:'add-slot',onClick:()=>sPk({gid:g.id,ds:w.str})},'+'))})))))),
 
       // MONTH VIEW
@@ -1125,7 +1422,7 @@ function App({role}){
         h('div',{id:'pdf-mo',className:'month-grid'},
           ["LUN","MAR","MIÉ","JUE","VIE","SÁB","DOM"].map(d=>h('div',{key:d,className:'month-hdr'},d)),
           mds.map((d,i)=>{if(!d)return h('div',{key:'e'+i,className:'month-cell empty'});const ds=fmt(d);const gs=mmp[ds]||[];
-            return h('div',{key:ds,className:'month-cell'},h('div',{className:'month-d'},d.getDate()),gs.map(g=>h('div',{key:g.id,className:'month-bar',style:{background:gcl[g.id]},onClick:()=>sGM(g)},g.name.length>12?g.name.slice(0,10)+'…':g.name)))})))
+            return h('div',{key:ds,className:'month-cell'},h('div',{className:'month-d'},d.getDate()),gs.map(g=>h('div',{key:g.id,className:'month-bar',style:{background:gcl[g.id]},onClick:()=>sOc(g.id)},g.name.length>12?g.name.slice(0,10)+'…':g.name)))})))
     ),
     // Fullscreen card detail
     ocData&&h(CardDetail,{g:ocData,ro,onClose:()=>sOc(null),onEdit:g=>{sOc(null);sGM(g)},setPk:sPk,mA,rA,uA,setEa:sEa,showMons}),
@@ -1134,6 +1431,24 @@ function App({role}){
     h(EditAct,{data:ea,onClose:()=>sEa(null),onSave:uA,onRemove:rA,ro}),
     showBackups&&h(BackupsModal,{onClose:()=>setShowBackups(false),onRestore:reloadFromAPI,ro}),
     showSettings&&h(SettingsModal,{onClose:()=>setShowSettings(false)}),
+    showMore&&h(MoreSheet,{onClose:()=>setShowMore(false),actions:[
+      {icon:'👁',label:si?'Ocultar detalles':'Ver detalles',onClick:()=>sSi(!si)},
+      (vw==='week'||vw==='month')&&{icon:'📄',label:'PDF',onClick:()=>{if(vw==='week')xpdf('pdf-wk','Planning_'+wl);else xpdf('pdf-mo',MN[cm.m])}},
+      {icon:'⬇',label:'Exportar JSON',onClick:()=>exportJSON(G)},
+      !ro&&{icon:'⬆',label:'Importar JSON',onClick:()=>importRef.current?.click()},
+      {icon:'🗂',label:'Historial',onClick:()=>setShowBackups(true)},
+      {icon:'⚙',label:'Ajustes',onClick:()=>setShowSettings(true)},
+      {icon:'🚪',label:'Salir',onClick:()=>{if(dirty&&!confirm('Tienes cambios sin guardar. ¿Salir igualmente?'))return;sessionStorage.removeItem('cazorla_role');location.reload()}},
+    ]}),
+
+    // BOTTOM NAV (solo móvil — display via CSS)
+    h('nav',{className:'bnav'},
+      [['cards','📋','Fichas'],['week','🗓','Planning'],['month','📅','Mes']].map(([k,ic,l])=>
+        h('button',{key:k,className:'bnav-btn'+(vw===k?' on':''),onClick:()=>sVw(k)},
+          h('span',{className:'ic'},ic),l))),
+
+    // FAB (solo móvil — display via CSS)
+    !ro&&h('button',{className:'fab',onClick:()=>sGM('new'),title:'Nuevo colegio','aria-label':'Nuevo colegio'},'+'),
     canInstall&&!installDismissed&&h('div',{className:'install-banner'},
       h('div',{className:'ib-icon'},'📲'),
       h('div',{className:'ib-text'},h('div',{className:'ib-title'},'Instalar Cazorla Planning'),h('div',{className:'ib-sub'},'Accede más rápido desde tu pantalla de inicio')),
