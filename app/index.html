@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cazorla Planning 2026</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f1a13">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════
+   CAZORLA PLANNING 2026 — Design System v5
+   Font: DM Sans (geometric, modern, friendly)
+   Theme: Dark forest + warm accents
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap');
+
+:root {
+  --bg: #f7f7f5;
+  --bg2: #efeeeb;
+  --card: #ffffff;
+  --bdr: #e8e6e1;
+  --bdr2: #d9d6cf;
+  --tx: #1a1814;
+  --tx2: #6b6560;
+  --tx3: #9c9690;
+
+  /* Forest palette */
+  --forest: #1a3a2a;
+  --forest-l: #e8f5ee;
+  --forest-d: #0f1a13;
+  --mint: #2ea055;
+  --mint-l: #d1f5df;
+
+  /* Accents */
+  --blue: #2563eb;
+  --amber: #d97706;
+  --red: #dc2626;
+  --purple: #7c3aed;
+
+  /* Sizing */
+  --r: 12px;
+  --r-sm: 8px;
+  --r-lg: 16px;
+  --sh: 0 1px 2px rgba(0,0,0,.04), 0 1px 5px rgba(0,0,0,.03);
+  --sh-md: 0 4px 16px rgba(0,0,0,.06);
+  --sh-lg: 0 12px 40px rgba(0,0,0,.1);
+  --transition: .15s cubic-bezier(.4,0,.2,1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0 }
+html { scroll-behavior: smooth }
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--tx);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+button { font-family: inherit; cursor: pointer }
+input, select, textarea { font-family: inherit }
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)} }
+@keyframes slideUp { from{transform:translateY(100%)}to{transform:translateY(0)} }
+@keyframes slideDown { from{transform:translateY(-10px);opacity:0}to{transform:translateY(0);opacity:1} }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:.4} }
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* ═══ LOGIN ═══ */
+.login-wrap {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--forest-d);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(46,160,85,.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(37,99,235,.06) 0%, transparent 50%);
+  padding: 20px;
+}
+.login-card {
+  background: var(--card);
+  border-radius: 24px;
+  padding: 44px 32px 36px;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: var(--sh-lg), 0 0 0 1px rgba(255,255,255,.05);
+  text-align: center;
+  animation: fadeIn .4s ease;
+}
+.login-icon { font-size: 48px; display: block; margin-bottom: 4px }
+.login-card h1 { font-size: 22px; font-weight: 800; color: var(--forest); margin-bottom: 2px }
+.login-card p { font-size: 12px; color: var(--tx3); margin-bottom: 24px }
+.login-input {
+  width: 100%; padding: 14px 16px;
+  border: 2px solid var(--bdr); border-radius: 14px;
+  font-size: 16px; outline: none;
+  text-align: center; letter-spacing: 3px;
+  transition: var(--transition);
+  background: var(--bg);
+}
+.login-input:focus { border-color: var(--mint); background: #fff; box-shadow: 0 0 0 4px rgba(46,160,85,.08) }
+.login-btn {
+  width: 100%; padding: 14px;
+  border: none; border-radius: 14px;
+  background: var(--forest);
+  color: #fff; font-size: 15px; font-weight: 700;
+  margin-top: 14px; transition: var(--transition);
+}
+.login-btn:hover { background: var(--mint) }
+.login-btn:active { transform: scale(.98) }
+.login-err { color: var(--red); font-size: 11px; margin-top: 10px; font-weight: 600 }
+
+/* ═══ SHELL (top + sidebar placeholder) ═══ */
+.shell { display: flex; flex-direction: column; min-height: 100dvh }
+
+/* ═══ TOPBAR ═══ */
+.top {
+  background: var(--forest-d);
+  padding: 0 16px;
+  position: sticky; top: 0; z-index: 100;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.top-in {
+  display: flex; align-items: center;
+  height: 54px; gap: 8px;
+  max-width: 1400px; margin: 0 auto;
+}
+.logo {
+  font-weight: 800; font-size: 16px;
+  color: #fff; display: flex; align-items: center; gap: 6px;
+  flex-shrink: 0; letter-spacing: -.3px;
+}
+.logo-leaf { font-size: 22px }
+.logo small { font-size: 10px; font-weight: 500; opacity: .4; margin-left: 2px }
+.top-r { display: flex; align-items: center; gap: 5px; margin-left: auto }
+
+/* Status */
+.sync-pill {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 10px; font-weight: 600;
+  transition: var(--transition);
+}
+.sync-saved { background: rgba(46,160,85,.15); color: #5eead4 }
+.sync-unsaved { background: rgba(251,191,36,.15); color: #fbbf24 }
+.sync-saving { background: rgba(96,165,250,.15); color: #93c5fd }
+.sync-err { background: rgba(248,113,113,.15); color: #f87171 }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor }
+.sync-saving .sync-dot { animation: pulse 1s infinite }
+
+.ro-badge {
+  background: rgba(251,191,36,.12); color: #fbbf24;
+  font-size: 9px; font-weight: 700;
+  padding: 3px 8px; border-radius: 6px;
+}
+
+/* Icon button (top bar) */
+.ti {
+  width: 34px; height: 34px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px; background: rgba(255,255,255,.04);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: rgba(255,255,255,.7);
+  transition: var(--transition); flex-shrink: 0;
+}
+.ti:hover { background: rgba(255,255,255,.1); color: #fff }
+.ti.on { background: var(--mint); color: #fff; border-color: var(--mint) }
+/* Text button (top bar) */
+.tt {
+  padding: 6px 14px; border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px; background: rgba(255,255,255,.06);
+  font-size: 11px; font-weight: 600; color: #fff;
+  display: inline-flex; align-items: center; gap: 4px;
+  transition: var(--transition); white-space: nowrap;
+}
+.tt:hover { background: rgba(255,255,255,.12) }
+.tt-g { background: var(--mint); border-color: var(--mint) }
+.tt-g:hover { background: #25944b }
+
+/* ═══ FILTER BAR ═══ */
+.fbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--bdr);
+  padding: 8px 16px;
+  position: sticky; top: 54px; z-index: 90;
+}
+.fbar-in {
+  display: flex; align-items: center; gap: 6px;
+  max-width: 1400px; margin: 0 auto; flex-wrap: wrap;
+}
+.tabs {
+  display: inline-flex;
+  background: var(--bg2); border-radius: var(--r-sm);
+  padding: 3px; gap: 2px;
+}
+.tab {
+  padding: 5px 12px; border: none;
+  border-radius: 6px; background: transparent;
+  font-size: 11px; font-weight: 600;
+  color: var(--tx3); transition: var(--transition);
+}
+.tab:hover { color: var(--tx) }
+.tab.on { background: var(--card); color: var(--tx); box-shadow: 0 1px 3px rgba(0,0,0,.06) }
+.search-box {
+  position: relative; flex-shrink: 0;
+}
+.search-box input {
+  padding: 6px 10px 6px 30px;
+  border: 1px solid var(--bdr); border-radius: var(--r-sm);
+  font-size: 11px; outline: none; width: 130px;
+  transition: var(--transition); background: var(--bg);
+}
+.search-box input:focus { border-color: var(--mint); width: 170px; background: #fff; box-shadow: 0 0 0 3px rgba(46,160,85,.06) }
+.search-box::before { content: '🔍'; position: absolute; left: 9px; top: 50%; transform: translateY(-50%); font-size: 11px }
+.spacer { flex: 1 }
+
+/* ═══ SAVE BAR (new!) ═══ */
+.save-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px;
+  background: #fffbeb; border-bottom: 1px solid #fde68a;
+  animation: slideDown .2s ease;
+  max-width: 1400px; margin: 0 auto; width: 100%;
+}
+.save-bar-wrap { background: #fffbeb; border-bottom: 1px solid #fde68a; position: sticky; top: 90px; z-index: 89 }
+.save-bar span { font-size: 11px; font-weight: 600; color: #92400e; flex: 1 }
+.save-btn {
+  padding: 6px 16px; border: none; border-radius: 8px;
+  font-size: 11px; font-weight: 700; transition: var(--transition);
+}
+.save-btn-ok { background: var(--mint); color: #fff }
+.save-btn-ok:hover { background: #259050 }
+.save-btn-undo { background: #fff; color: #92400e; border: 1px solid #fde68a }
+.save-btn-undo:hover { background: #fef3c7 }
+
+/* ═══ MAIN CONTENT ═══ */
+.main { max-width: 1400px; margin: 0 auto; padding: 16px }
+
+/* KPIs */
+.kpis { display: flex; gap: 8px; margin-bottom: 14px }
+.kpi {
+  background: var(--card); border: 1px solid var(--bdr);
+  border-radius: var(--r); padding: 10px 16px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: var(--sh); animation: fadeIn .3s ease;
+}
+.kpi-icon { font-size: 20px }
+.kpi-val { font-size: 22px; font-weight: 800; color: var(--forest); line-height: 1 }
+.kpi-lbl { font-size: 9px; color: var(--tx3); font-weight: 500; text-transform: uppercase; letter-spacing: .5px }
+
+/* Nav (week/month) */
+.nav { display: flex; align-items: center; gap: 8px; margin-bottom: 10px }
+.nav h2 { font-size: 14px; font-weight: 700; flex: 1 }
+.nav-btn {
+  width: 30px; height: 30px;
+  border: 1px solid var(--bdr); border-radius: var(--r-sm);
+  background: var(--card); font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.nav-btn:hover { background: var(--forest-l); border-color: var(--mint) }
+
+/* ═══ PLANNING GRID ═══ */
+.wk-wrap {
+  display: block; width: 100%;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+}
+.wk {
+  display: grid; gap: 1px;
+  background: var(--bdr2);
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--sh-md);
+  width: max-content; min-width: 100%;
+}
+.wk-corner {
+  background: var(--forest-d); padding: 6px;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.wk-corner span { color: rgba(255,255,255,.3); font-size: 7px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px }
+.wk-dh {
+  background: var(--forest-d); color: #fff;
+  padding: 6px 2px; text-align: center;
+}
+.wk-dh.we { background: #1f2e27 }
+.wk-dh .d-day { font-size: 7px; opacity: .5; text-transform: uppercase; letter-spacing: .5px; font-weight: 600 }
+.wk-dh .d-num { font-size: 18px; font-weight: 800; line-height: 1.1 }
+.wk-dh .d-mon { font-size: 7px; opacity: .25 }
+
+/* School name cell */
+.wk-name {
+  background: var(--card); padding: 5px 6px;
+  display: flex; flex-direction: column; justify-content: center;
+  cursor: pointer; border-right: 3px solid var(--mint);
+  transition: var(--transition); min-width: 0;
+}
+.wk-name:hover { background: var(--forest-l) }
+.wk-name .n { font-weight: 700; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+.wk-name .s { font-size: 7px; color: var(--tx3) }
+.wk-name .info { font-size: 7px; line-height: 1.3; margin-top: 1px }
+.wk-name .info-m { color: var(--blue) }
+.wk-name .info-n { color: var(--amber) }
+
+/* Day cells */
+.wk-cell {
+  background: var(--card); padding: 2px;
+  min-height: 50px; display: flex; flex-direction: column; gap: 1px;
+  transition: background var(--transition);
+}
+.wk-cell.off { background: var(--bg) }
+.wk-cell.drop { background: var(--mint-l); box-shadow: inset 0 0 0 2px var(--mint) }
+
+/* ═══ ACTIVITY CHIP ═══ */
+.chip-w {
+  display: flex; border-radius: 5px; overflow: hidden;
+  transition: transform .08s, box-shadow .08s;
+}
+.chip-w:hover { box-shadow: 0 2px 6px rgba(0,0,0,.12); transform: translateY(-1px); z-index: 2 }
+.chip {
+  display: flex; align-items: center; gap: 2px;
+  padding: 3px 5px; font-size: 9px; font-weight: 600;
+  color: #fff; cursor: grab; flex: 1;
+  min-height: 20px; line-height: 1.2; user-select: none;
+}
+.chip-icon { font-style: normal; font-size: 10px; flex-shrink: 0 }
+.chip-time {
+  font-size: 7px; background: rgba(255,255,255,.2);
+  padding: 0 3px; border-radius: 3px;
+  font-weight: 700; flex-shrink: 0;
+}
+.chip-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0 }
+.chip-mons { font-size: 7px; opacity: .8; flex-shrink: 0; max-width: 40px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.chip-arrows { display: flex; flex-direction: column; opacity: 0; transition: opacity .08s }
+.chip-w:hover .chip-arrows { opacity: 1 }
+.chip-mv {
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 6px; color: #fff; padding: 0 4px;
+  flex: 1; background: rgba(0,0,0,.08); transition: background .08s;
+}
+.chip-mv:hover { background: rgba(0,0,0,.2) }
+.chip-mv:disabled { opacity: .15; cursor: default }
+.chip-x {
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 7px; color: #fff; padding: 0 5px;
+  opacity: 0; background: rgba(0,0,0,.08); transition: .08s;
+}
+.chip-w:hover .chip-x { opacity: 1 }
+.chip-x:hover { background: rgba(220,38,38,.4) }
+
+.add-slot {
+  border: 1px dashed var(--bdr2); border-radius: 4px;
+  padding: 1px; text-align: center;
+  font-size: 8px; color: var(--tx3); cursor: pointer;
+  transition: var(--transition);
+}
+.add-slot:hover { border-color: var(--mint); color: var(--mint); background: var(--forest-l) }
+
+/* ═══ CARDS LIST (collapsed) ═══ */
+.cards { display: flex; flex-direction: column; gap: 6px }
+.card-row {
+  background: var(--card); border: 1px solid var(--bdr);
+  border-radius: var(--r); padding: 14px 16px;
+  cursor: pointer; display: flex; align-items: center; gap: 12px;
+  transition: var(--transition); animation: fadeIn .25s ease;
+}
+.card-row:hover { border-color: var(--bdr2); box-shadow: var(--sh-md) }
+.card-row:active { transform: scale(.995) }
+.card-dot { width: 4px; align-self: stretch; border-radius: 2px; flex-shrink: 0 }
+.card-row h3 { font-size: 14px; font-weight: 700; margin: 0 }
+.card-row .sub { font-size: 11px; color: var(--tx2); margin-top: 1px }
+.card-arrow { color: var(--tx3); font-size: 18px; flex-shrink: 0; transition: transform .2s }
+
+/* ═══ CARD DETAIL (fullscreen) ═══ */
+.detail-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--bg); overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: slideUp .25s cubic-bezier(.4,0,.2,1);
+}
+.detail-head {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--forest-d); color: #fff;
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.detail-head h2 { font-size: 16px; font-weight: 800; flex: 1; margin: 0 }
+.detail-head .sub { font-size: 10px; opacity: .6 }
+.detail-close {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(255,255,255,.15); border-radius: 10px;
+  background: rgba(255,255,255,.06); cursor: pointer;
+  font-size: 16px; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.detail-close:hover { background: rgba(255,255,255,.12) }
+
+.detail-meta {
+  padding: 14px 16px; background: var(--card);
+  border-bottom: 1px solid var(--bdr);
+}
+.detail-meta p { font-size: 12px; color: var(--tx2); line-height: 1.7 }
+.detail-meta .meta-blue { color: var(--blue) }
+.detail-meta .meta-amber { color: var(--amber) }
+.detail-meta-btns { display: flex; gap: 6px; margin-top: 8px }
+
+/* Day block */
+.day-block { margin: 0 16px 20px }
+.day-header {
+  position: sticky; top: 56px; z-index: 5;
+  background: var(--bg); padding: 12px 0 8px;
+  display: flex; align-items: baseline; gap: 8px;
+}
+.day-num { font-size: 32px; font-weight: 800; color: var(--forest); line-height: 1 }
+.day-name {
+  font-size: 12px; font-weight: 600; color: var(--tx3);
+  text-transform: uppercase; letter-spacing: .8px;
+}
+
+/* Activity row in detail */
+.act-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 12px 14px; background: var(--card);
+  border: 1px solid var(--bdr); border-radius: var(--r);
+  margin-bottom: 5px; transition: var(--transition);
+  cursor: pointer;
+}
+.act-row:hover { border-color: var(--bdr2); box-shadow: var(--sh) }
+.act-row:active { background: var(--bg) }
+.act-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: #fff; flex-shrink: 0;
+}
+.act-body { flex: 1; min-width: 0 }
+.act-name { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px }
+.act-time {
+  font-size: 10px; background: var(--bg2);
+  padding: 1px 7px; border-radius: 5px;
+  font-weight: 700; color: var(--tx2); flex-shrink: 0;
+}
+.act-mons { font-size: 11px; color: var(--blue); margin-top: 2px }
+.act-btns {
+  display: flex; gap: 4px; flex-shrink: 0; align-self: center;
+  opacity: 0; transition: opacity .1s;
+}
+.act-row:hover .act-btns { opacity: 1 }
+.act-btn {
+  width: 26px; height: 26px;
+  border: 1px solid var(--bdr); border-radius: 7px;
+  background: var(--card); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; transition: var(--transition);
+}
+.act-btn:hover { background: var(--forest-l); border-color: var(--mint) }
+.act-btn.del:hover { background: #fef2f2; border-color: var(--red) }
+.act-btn:disabled { opacity: .15 }
+
+.add-act-btn {
+  border: 1px dashed var(--bdr2); border-radius: var(--r-sm);
+  padding: 6px; text-align: center;
+  font-size: 11px; font-weight: 500; color: var(--tx3);
+  cursor: pointer; transition: var(--transition);
+  margin-top: 2px;
+}
+.add-act-btn:hover { border-color: var(--mint); color: var(--mint); background: var(--forest-l) }
+
+/* ═══ MONTH ═══ */
+.month-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 1px; background: var(--bdr2);
+  border-radius: var(--r); overflow: hidden;
+  box-shadow: var(--sh-md);
+}
+.month-hdr {
+  background: var(--forest-d); color: #fff;
+  padding: 5px; text-align: center;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px;
+}
+.month-cell { background: var(--card); padding: 3px; min-height: 58px }
+.month-cell.empty { background: var(--bg) }
+.month-d { font-size: 10px; font-weight: 700; color: var(--tx3); margin-bottom: 1px }
+.month-bar {
+  padding: 1px 4px; border-radius: 3px;
+  font-size: 7px; font-weight: 700; color: #fff;
+  cursor: pointer; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; margin-bottom: 1px;
+  transition: filter .08s;
+}
+.month-bar:hover { filter: brightness(1.12) }
+
+/* ═══ MODALS ═══ */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,26,19,.4);
+  z-index: 300; display: flex;
+  align-items: center; justify-content: center;
+  padding: 12px; backdrop-filter: blur(4px);
+}
+.modal {
+  background: var(--card);
+  border-radius: 20px; width: 100%;
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: var(--sh-lg), 0 0 0 1px rgba(0,0,0,.03);
+  animation: fadeIn .2s ease;
+}
+.modal-head {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--bdr);
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; background: var(--card);
+  z-index: 1; border-radius: 20px 20px 0 0;
+}
+.modal-head h3 { font-size: 16px; font-weight: 700 }
+.modal-x {
+  width: 32px; height: 32px; border: none;
+  background: var(--bg2); border-radius: 10px;
+  cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.modal-x:hover { background: var(--bdr) }
+.modal-body { padding: 16px 18px }
+.modal-foot {
+  padding: 12px 18px;
+  border-top: 1px solid var(--bdr);
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+
+/* Form fields */
+.field { margin-bottom: 10px }
+.field label {
+  display: block; font-size: 10px; font-weight: 600;
+  color: var(--tx3); text-transform: uppercase;
+  letter-spacing: .4px; margin-bottom: 3px;
+}
+.field input, .field select, .field textarea {
+  width: 100%; padding: 9px 12px;
+  border: 1px solid var(--bdr); border-radius: 10px;
+  font-size: 13px; outline: none;
+  transition: var(--transition); background: var(--bg);
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--mint);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(46,160,85,.06);
+}
+.field input[readonly], .field textarea[readonly] { background: var(--bg); color: var(--tx3) }
+textarea { resize: vertical; min-height: 48px }
+
+/* Generic buttons */
+.btn {
+  padding: 6px 14px; border: 1px solid var(--bdr);
+  border-radius: 10px; background: var(--card);
+  font-size: 11px; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 4px;
+  transition: var(--transition); color: var(--tx);
+}
+.btn:hover { background: var(--bg2) }
+.btn-green { background: var(--mint); color: #fff; border-color: var(--mint) }
+.btn-green:hover { background: #259050 }
+.btn-red { color: var(--red); border-color: #fecaca }
+.btn-red:hover { background: #fef2f2 }
+
+/* Picker */
+.pick-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+  gap: 4px; margin-bottom: 8px;
+}
+.pick-item {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 8px; border-radius: 10px;
+  cursor: pointer; border: 1.5px solid var(--bdr);
+  transition: var(--transition); background: var(--card);
+}
+.pick-item:hover { border-color: var(--mint); background: var(--forest-l) }
+.pick-item.sel { border-width: 2px }
+.pick-dot {
+  width: 22px; height: 22px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; color: #fff; flex-shrink: 0;
+}
+.pick-label { font-size: 10px; font-weight: 600; flex: 1 }
+.pick-time {
+  width: 40px; padding: 3px;
+  border: 1px solid var(--bdr); border-radius: 5px;
+  font-size: 9px; text-align: center; outline: none;
+}
+
+.empty-state { text-align: center; padding: 48px 20px; color: var(--tx3) }
+.empty-state .es-icon { font-size: 36px; margin-bottom: 8px }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .top-in { height: 48px }
+  .logo { font-size: 14px }
+  .logo small { display: none }
+  .fbar { padding: 6px 10px; top: 48px }
+  .tab { padding: 4px 9px; font-size: 10px }
+  .main { padding: 10px 10px }
+  .day-header { top: 48px }
+  .detail-head { padding: 10px 12px }
+  .act-row { padding: 10px 12px; gap: 8px }
+  .act-icon { width: 32px; height: 32px; font-size: 15px; border-radius: 8px }
+  .act-name { font-size: 13px }
+  .act-btns { opacity: 1 } /* Always show on touch */
+  .chip-arrows { opacity: 1 }
+  .chip-x { opacity: 1 }
+  .save-bar-wrap { top: 84px }
+}
+@media (max-width: 480px) {
+  .search-box input { width: 80px }
+  .search-box input:focus { width: 110px }
+  .kpi { padding: 8px 10px }
+  .kpi-val { font-size: 18px }
+  .tabs { padding: 2px; gap: 1px }
+  .tab { padding: 3px 7px; font-size: 9px }
+  .tt { padding: 5px 10px; font-size: 10px }
+  .ti { width: 30px; height: 30px; font-size: 12px }
+}
+
+
+.act-row.dragging{opacity:.4;transform:scale(.97)}
+.act-row.drag-over{box-shadow:0 -3px 0 0 var(--mint)}
+.act-row-obs{font-size:10px;color:var(--amber);margin-top:2px;font-style:italic}
+.pdf-print-area{width:595px;padding:24px;background:#fff;font-family:'DM Sans',sans-serif;position:fixed;left:-9999px}
+.pdf-print-area h2{font-size:18px;color:#1a3a2a;margin-bottom:4px}
+.pdf-print-area .pdf-meta{font-size:10px;color:#666;margin-bottom:12px;line-height:1.6}
+.pdf-print-area .pdf-day-title{font-size:14px;font-weight:700;color:#1a3a2a;padding:8px 0 4px;border-bottom:2px solid #1a3a2a;margin-bottom:6px}
+.pdf-print-area .pdf-act{display:flex;align-items:flex-start;gap:6px;padding:5px 0;border-bottom:1px solid #f0f0f0}
+.pdf-print-area .pdf-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;margin-top:2px}
+.pdf-print-area .pdf-act-name{font-size:11px;font-weight:600}
+.pdf-print-area .pdf-act-time{font-size:10px;color:#666;font-weight:700}
+.pdf-print-area .pdf-act-mons{font-size:10px;color:#1864ab}
+.pdf-print-area .pdf-act-obs{font-size:9px;color:#d97706;font-style:italic}
+.mons-toggle{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.mons-toggle label{font-size:11px;color:var(--tx2);font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px}
+.toggle-switch{position:relative;width:36px;height:20px;border-radius:10px;background:var(--bdr2);cursor:pointer;transition:var(--transition);flex-shrink:0}
+.toggle-switch.on{background:var(--mint)}
+.toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:var(--transition);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.toggle-switch.on::after{left:18px}
+@media(hover:none){.act-btns{opacity:1!important}.chip-arrows{opacity:1!important}.chip-x{opacity:1!important}}
+
+
+/* Install banner */
+.install-banner{position:fixed;bottom:0;left:0;right:0;z-index:500;background:var(--forest-d);padding:14px 16px;display:flex;align-items:center;gap:12px;animation:slideUpBanner .3s ease;box-shadow:0 -4px 20px rgba(0,0,0,.25)}
+@keyframes slideUpBanner{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.install-banner .ib-icon{font-size:32px;flex-shrink:0}
+.install-banner .ib-text{flex:1;color:#fff}
+.install-banner .ib-title{font-size:14px;font-weight:700}
+.install-banner .ib-sub{font-size:10px;opacity:.6;margin-top:1px}
+.install-banner .ib-btn{padding:10px 20px;border:none;border-radius:10px;background:var(--mint);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:var(--transition);white-space:nowrap}
+.install-banner .ib-btn:hover{background:#259050}
+.install-banner .ib-btn:active{transform:scale(.97)}
+.install-banner .ib-close{width:28px;height:28px;border:1px solid rgba(255,255,255,.15);border-radius:8px;background:transparent;color:rgba(255,255,255,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.install-banner .ib-close:hover{color:#fff;background:rgba(255,255,255,.1)}
+
+/* ═══ BACKUPS / SETTINGS MODAL ═══ */
+.bk-list{display:flex;flex-direction:column;gap:6px;max-height:50vh;overflow:auto}
+.bk-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--bdr);border-radius:10px;background:var(--bg)}
+.bk-row .bk-when{flex:1;font-size:12px;font-weight:600;color:var(--tx)}
+.bk-row .bk-meta{font-size:10px;color:var(--tx3)}
+.bk-row .bk-tag{font-size:9px;padding:2px 6px;border-radius:6px;background:var(--bdr);color:var(--tx2);font-weight:700}
+.bk-empty{text-align:center;padding:24px;color:var(--tx3);font-size:12px}
+.last-saved{font-size:10px;color:rgba(255,255,255,.5);margin-right:6px;white-space:nowrap}
+@media(max-width:768px){.last-saved{display:none}}
+.tip-text{font-size:11px;color:var(--tx2);line-height:1.5;margin-bottom:8px}
+.tip-text code{background:var(--bg2);padding:1px 5px;border-radius:4px;font-family:ui-monospace,monospace;font-size:10px}
+.danger-banner{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:8px 12px;border-radius:8px;font-size:11px;font-weight:600;margin-bottom:10px}
+
+/* ═══════════════════════════════════════════
+   MOBILE DESIGN v2 — Safe areas, bottom nav,
+   FAB, bottom sheets, larger touch targets,
+   vertical Planning, haptic feedback.
+   ═══════════════════════════════════════════ */
+
+/* Safe-area insets (notch / Dynamic Island / home bar) */
+.top { padding-top: env(safe-area-inset-top); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)) }
+.detail-head { padding-top: max(12px, calc(12px + env(safe-area-inset-top))) }
+.install-banner { padding-bottom: calc(14px + env(safe-area-inset-bottom)); padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)) }
+.save-bar-wrap { padding-bottom: env(safe-area-inset-bottom) }
+
+/* ═══ BOTTOM NAVIGATION (mobile only) ═══ */
+.bnav {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--card); border-top: 1px solid var(--bdr);
+  padding: 4px env(safe-area-inset-right) calc(4px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
+  z-index: 95; box-shadow: 0 -2px 14px rgba(0,0,0,.06);
+}
+.bnav-btn {
+  flex: 1; border: none; background: transparent;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  padding: 6px 4px 4px; font-size: 10px; font-weight: 600;
+  color: var(--tx3); min-height: 54px; transition: color .15s;
+  border-radius: 10px; position: relative;
+}
+.bnav-btn .ic { font-size: 22px; line-height: 1; transition: transform .2s }
+.bnav-btn.on { color: var(--forest) }
+.bnav-btn.on .ic { transform: scale(1.1) }
+.bnav-btn.on::before {
+  content: ''; position: absolute; top: 4px; left: 50%;
+  transform: translateX(-50%); width: 28px; height: 3px;
+  background: var(--mint); border-radius: 2px;
+}
+
+/* ═══ FAB ═══ */
+.fab {
+  display: none;
+  position: fixed; right: 16px;
+  bottom: calc(74px + env(safe-area-inset-bottom));
+  width: 56px; height: 56px; border-radius: 28px;
+  background: var(--mint); color: #fff; border: none;
+  box-shadow: 0 6px 20px rgba(46,160,85,.4), 0 2px 6px rgba(0,0,0,.1);
+  font-size: 30px; font-weight: 300; line-height: 1; z-index: 94;
+  cursor: pointer;
+  transition: transform .15s cubic-bezier(.4,0,.2,1);
+  align-items: center; justify-content: center;
+  padding: 0;
+}
+.fab:active { transform: scale(.92) }
+
+/* ═══ MOBILE TOPBAR ═══ */
+.hide-mobile { display: flex }
+.show-mobile { display: none }
+
+/* ═══ SKELETON LOADING ═══ */
+.skel {
+  background: linear-gradient(90deg, var(--bg2) 0%, var(--bdr) 50%, var(--bg2) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--r);
+}
+@keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
+.skel-card { height: 70px }
+.skel-list { display: flex; flex-direction: column; gap: 8px; padding: 14px; max-width: 700px; margin: 0 auto; width: 100% }
+
+/* Spinner */
+.spin-inline { display: inline-block; width: 12px; height: 12px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin .7s linear infinite; margin-right: 6px; vertical-align: -2px }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MEDIA QUERIES — Mobile (<= 768px)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Tap targets ≥ 44px */
+  .ti { width: 44px; height: 44px; font-size: 18px; border-radius: 12px }
+  .modal-x, .detail-close { width: 44px; height: 44px; font-size: 18px }
+  .nav-btn { width: 44px; height: 44px; font-size: 16px }
+  .act-btn { width: 40px; height: 40px; font-size: 13px; border-radius: 10px }
+  .save-btn { min-height: 44px; padding: 10px 18px; font-size: 13px }
+  .btn { min-height: 42px; padding: 10px 16px; font-size: 12px }
+  .tab { min-height: 38px; padding: 8px 14px; font-size: 12px }
+  .tt { padding: 10px 14px; font-size: 12px; min-height: 40px }
+  .login-input, .login-btn { min-height: 50px }
+
+  /* Topbar: ocultar secundarios, mostrar ☰ Más */
+  .ti.hide-mobile, .tt-g.hide-mobile, .last-saved { display: none !important }
+  .ti.show-mobile { display: flex !important }
+  .top-r { gap: 6px }
+  .sync-pill { padding: 6px 10px; font-size: 10px }
+
+  /* Filter bar: más aire, ocultar tabs de vista (van a bnav) */
+  .fbar { padding: 10px 12px }
+  .fbar .tabs.view-tabs { display: none }
+  .search-box input { width: 100%; min-height: 40px; font-size: 13px; padding: 10px 12px 10px 32px }
+  .search-box input:focus { width: 100% }
+  .search-box { flex: 1 }
+
+  /* KPIs más compactos pero legibles */
+  .kpis { gap: 6px; margin-bottom: 12px }
+  .kpi { padding: 12px 14px; flex: 1; min-width: 0 }
+  .kpi-icon { font-size: 22px }
+  .kpi-val { font-size: 22px }
+  .kpi-lbl { font-size: 9px }
+
+  /* Cards más respirables */
+  .card-row { padding: 16px; gap: 14px; border-radius: 14px }
+  .card-row h3 { font-size: 15px }
+  .card-row .sub { font-size: 12px; margin-top: 3px }
+  .card-dot { width: 5px }
+  .card-arrow { font-size: 22px }
+
+  /* PLANNING: convertir grid horizontal en lista vertical agrupada */
+  .wk-wrap { overflow-x: visible; padding: 0 }
+  .wk { display: flex; flex-direction: column; gap: 8px; background: transparent; box-shadow: none; min-width: 0; width: 100%; border-radius: 0 }
+  .wk-corner, .wk-dh { display: none }
+  .wk-name {
+    background: var(--card); border: 1px solid var(--bdr);
+    border-left: 4px solid var(--mint); border-right: none;
+    border-radius: 12px; padding: 12px 14px;
+    box-shadow: var(--sh); margin-top: 4px;
+  }
+  .wk-name::before {
+    content: '👥 ' attr(data-students); display: block;
+    font-size: 11px; color: var(--tx3); font-weight: 600; margin-top: 2px;
+  }
+  .wk-name .n { font-size: 15px; white-space: normal }
+  .wk-name .s { font-size: 12px }
+  .wk-name .info { font-size: 11px }
+  .wk-cell {
+    background: var(--card); border: 1px solid var(--bdr);
+    border-radius: 10px; padding: 10px 12px;
+    min-height: auto; gap: 5px;
+    margin-left: 14px;
+  }
+  .wk-cell.off { display: none }
+  .wk-cell::before {
+    content: attr(data-day); display: block;
+    font-size: 10px; font-weight: 700; color: var(--forest);
+    text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px;
+  }
+
+  /* Chips más legibles en mobile */
+  .chip-w { border-radius: 10px }
+  .chip { padding: 8px 12px; font-size: 13px; min-height: 38px; gap: 6px; cursor: pointer }
+  .chip-icon { font-size: 16px }
+  .chip-time { font-size: 10px; padding: 2px 6px }
+  .chip-mons { font-size: 10px; max-width: 80px }
+  .chip-arrows { opacity: 1; flex-direction: row }
+  .chip-mv { min-width: 32px; min-height: 28px; font-size: 11px }
+  .chip-x { opacity: 1; min-width: 36px; font-size: 12px; padding: 0 10px }
+
+  .add-slot { padding: 10px; font-size: 12px; min-height: 40px; border-radius: 10px }
+
+  /* MES: celdas más altas */
+  .month-cell { min-height: 70px; padding: 4px 3px }
+  .month-d { font-size: 12px; margin-bottom: 3px }
+  .month-bar { font-size: 9px; padding: 3px 4px; min-height: 18px; line-height: 1.25; border-radius: 5px; margin-bottom: 2px }
+  .month-hdr { padding: 8px 2px; font-size: 10px }
+
+  /* Activity rows: más amplios */
+  .act-row { padding: 14px; gap: 12px; border-radius: 14px }
+  .act-icon { width: 40px; height: 40px; font-size: 18px; border-radius: 12px }
+  .act-name { font-size: 14px }
+  .act-btns { opacity: 1; gap: 4px }
+
+  /* MODALES → Bottom Sheets */
+  .overlay { padding: 0; align-items: flex-end }
+  .modal {
+    max-height: 92dvh; max-width: 100% !important;
+    border-radius: 20px 20px 0 0;
+    animation: slideUp .25s cubic-bezier(.4,0,.2,1);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .modal-head {
+    padding-top: 22px; position: relative;
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-head::before {
+    content: ''; position: absolute; top: 8px; left: 50%;
+    transform: translateX(-50%); width: 40px; height: 4px;
+    background: var(--bdr2); border-radius: 2px;
+  }
+  .modal-head h3 { font-size: 17px }
+  .modal-body { padding: 14px 18px 18px }
+  .modal-foot {
+    padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+    position: sticky; bottom: 0; background: var(--card);
+    box-shadow: 0 -2px 8px rgba(0,0,0,.04);
+  }
+
+  /* Picker grid 2 cols en mobile */
+  .pick-grid { grid-template-columns: 1fr 1fr; gap: 6px }
+  .pick-item { padding: 10px; min-height: 50px }
+  .pick-dot { width: 28px; height: 28px; font-size: 14px }
+  .pick-label { font-size: 12px }
+  .pick-time { width: 60px; min-height: 32px; font-size: 11px }
+
+  /* Day block en detail */
+  .day-num { font-size: 28px }
+  .day-name { font-size: 11px }
+  .day-block { margin: 0 12px 18px }
+  .day-header { top: calc(56px + env(safe-area-inset-top)) }
+
+  /* Detail header con safe area */
+  .detail-meta { padding: 14px 16px }
+  .detail-meta p { font-size: 13px; line-height: 1.65 }
+
+  /* Mostrar bottom nav y FAB en mobile */
+  .bnav { display: flex }
+  .fab { display: flex }
+
+  /* Hueco inferior para no tapar contenido tras bnav */
+  .main { padding-bottom: calc(80px + env(safe-area-inset-bottom)) }
+  .save-bar-wrap { top: calc(54px + env(safe-area-inset-top)) }
+  .fbar { top: calc(54px + env(safe-area-inset-top)) }
+
+  /* :active feedback (sustituto haptic) */
+  .ti:active, .tt:active, .tab:active, .nav-btn:active,
+  .act-btn:active, .modal-x:active, .btn:active,
+  .bnav-btn:active, .save-btn:active, .pick-item:active,
+  .chip-mv:active, .chip-x:active, .add-slot:active,
+  .add-act-btn:active, .detail-close:active {
+    transform: scale(.94);
+    transition: transform .08s;
+  }
+  .card-row:active { transform: scale(.985); background: var(--bg) }
+  .act-row:active { background: var(--forest-l) }
+  .chip:active { filter: brightness(.92) }
+  .month-bar:active { transform: scale(.92) }
+
+  /* Mons toggle más amplio */
+  .mons-toggle label { font-size: 13px; padding: 6px 0 }
+  .toggle-switch { width: 42px; height: 24px; border-radius: 12px }
+  .toggle-switch::after { width: 20px; height: 20px }
+  .toggle-switch.on::after { left: 20px }
+
+  /* Búsqueda en card view */
+  .empty-state { padding: 40px 20px }
+  .empty-state .es-icon { font-size: 42px }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MEDIA QUERIES — Phones pequeños (<= 480px)
+   ═══════════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .top-in { height: 52px }
+  .logo { font-size: 15px; gap: 5px }
+  .logo small { display: none }
+  .logo-leaf { font-size: 22px }
+  .top-r { gap: 4px }
+
+  .ti { width: 42px; height: 42px; font-size: 17px }
+  .sync-pill { padding: 5px 8px; font-size: 9px }
+  .sync-pill .sync-dot { width: 5px; height: 5px }
+
+  .kpis { gap: 5px }
+  .kpi { padding: 10px 12px; gap: 8px }
+  .kpi-icon { font-size: 18px }
+  .kpi-val { font-size: 18px }
+
+  .month-cell { min-height: 60px; padding: 3px 2px }
+  .month-bar { font-size: 8px }
+
+  .fab { width: 52px; height: 52px; font-size: 28px; bottom: calc(70px + env(safe-area-inset-bottom)) }
+
+  .bnav-btn { font-size: 9px }
+  .bnav-btn .ic { font-size: 20px }
+}
+
+/* Touch device global tweaks */
+@media (hover: none) and (pointer: coarse) {
+  .act-btns, .chip-arrows, .chip-x { opacity: 1 !important }
+  .chip-w:hover { transform: none; box-shadow: none }
+  .card-row:hover { box-shadow: none }
+  .act-row:hover { box-shadow: none }
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const{useState,useEffect,useCallback,useMemo,useRef,Fragment:F}=React;
+const h=React.createElement;
+const API='api.php',VER=7;
+const LS_DATA='cazorla_data_cache_v1';
+const LS_TS='cazorla_data_ts_v1';
+const LS_TOKEN='cazorla_api_token';
+const cacheLocal=d=>{try{localStorage.setItem(LS_DATA,JSON.stringify(d));localStorage.setItem(LS_TS,new Date().toISOString())}catch{}};
+const readLocal=()=>{try{const d=localStorage.getItem(LS_DATA);const t=localStorage.getItem(LS_TS);if(d)return{data:JSON.parse(d),ts:t}}catch{}return null};
+const apiHeaders=()=>{const o={'Content-Type':'application/json'};const t=localStorage.getItem(LS_TOKEN);if(t)o['X-Api-Token']=t;return o};
+const CAN_DRAG=typeof window!=='undefined'&&window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+const CAT=[
+{k:"desayuno",l:"Desayuno",i:"☀️",c:"#e67700",g:"comida"},{k:"almuerzo",l:"Almuerzo",i:"🍴",c:"#d9480f",g:"comida"},
+{k:"picnic_si",l:"Pícnic (Incl.)",i:"🧺",c:"#862e09",g:"comida"},{k:"picnic_no",l:"Pícnic (No incl.)",i:"🧺",c:"#868e96",g:"comida"},
+{k:"cena",l:"Cena",i:"🍽️",c:"#343a40",g:"comida"},{k:"aseo",l:"Aseo",i:"🚿",c:"#868e96",g:"rutina"},
+{k:"velada",l:"Velada",i:"🌙",c:"#5f3dc4",g:"rutina"},{k:"dormir",l:"Dormir",i:"😴",c:"#364fc7",g:"rutina"},
+{k:"llegada",l:"Llegada / Salida",i:"🚌",c:"#c92a2a",g:"rutina"},
+{k:"visita",l:"Visita Cazorla",i:"🏘️",c:"#1864ab",g:"act"},{k:"escape",l:"Escape City",i:"🔑",c:"#7048e8",g:"act"},
+{k:"castillo",l:"Castillo",i:"🏰",c:"#e67700",g:"act"},{k:"frondosa",l:"Frondosa",i:"🌳",c:"#2b8a3e",g:"act"},
+{k:"multiaventura",l:"Multiaventura",i:"🧗",c:"#0ca678",g:"act"},{k:"trekking",l:"Trekking",i:"🥾",c:"#5c940d",g:"act"},
+{k:"paseo",l:"Paseo Cazorla",i:"🚶",c:"#74b816",g:"act"},{k:"talleres",l:"Talleres",i:"🎨",c:"#e64980",g:"act"},
+{k:"cerrada",l:"Cerrada Utrero",i:"🏞️",c:"#0c8599",g:"act"},{k:"piraguas",l:"Piraguas",i:"🚣",c:"#1971c2",g:"act"},
+{k:"cinegetico",l:"Cinegético",i:"🦌",c:"#5f3dc4",g:"act"},{k:"rafting",l:"Rafting",i:"🌊",c:"#1864ab",g:"act"},
+{k:"borosa",l:"Borosa",i:"💧",c:"#0c8599",g:"act"},{k:"barrancos",l:"Barrancos",i:"⛰️",c:"#d9480f",g:"act"},
+{k:"caballos",l:"Caballos",i:"🐴",c:"#862e09",g:"act"},{k:"gymkana",l:"Gymkana",i:"🎯",c:"#e64980",g:"act"},
+{k:"ubeda",l:"Úbeda",i:"🏛️",c:"#862e09",g:"exc"},{k:"baeza",l:"Baeza",i:"🏛️",c:"#495057",g:"exc"},
+];
+const CM=Object.fromEntries(CAT.map(x=>[x.k,x]));
+const HT=["Hotel Ciudad de Cazorla","Hotel Villa Turística","Albergue","Otro"];
+const MN=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const DN=["DOM","LUN","MAR","MIÉ","JUE","VIE","SÁB"],DNF=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+const GN={comida:"🍽 Comidas",rutina:"🔄 Rutina",act:"🌿 Actividades",exc:"🗺 Excursiones"};
+const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const par=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
+const addD=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const getMon=d=>{const x=new Date(d);const dy=x.getDay();x.setDate(x.getDate()-(dy===0?6:dy-1));x.setHours(0,0,0,0);return x};
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
+const mkA=(t,time="")=>({id:uid(),type:t,time,label:CM[t]?.l||t,monitors:"",obs:""});
+const GC=["#2b8a3e","#1864ab","#d9480f","#7048e8","#0ca678","#e67700","#c92a2a","#0c8599","#862e09","#e64980","#1971c2","#5c940d","#5f3dc4","#495057","#d9480f"];
+
+async function apiLoad(){try{const r=await fetch(API+'?action=load');const j=await r.json();if(j.ok&&j.data?.length>0)return{data:j.data,updated:j.updated};return null}catch{return null}}
+async function apiSave(d){try{const r=await fetch(API+'?action=save',{method:'POST',headers:apiHeaders(),body:JSON.stringify({data:d,version:VER})});const j=await r.json();return{ok:!!j.ok,error:j.error||null,updated:j.updated||null}}catch(e){return{ok:false,error:String(e)}}}
+async function apiCheck(s){try{const r=await fetch(API+'?action=check&since='+encodeURIComponent(s));return await r.json()}catch{return null}}
+async function apiBackups(){try{const r=await fetch(API+'?action=backups');return await r.json()}catch{return null}}
+async function apiRestore(id){try{const r=await fetch(API+'?action=restore&id='+id,{method:'POST',headers:apiHeaders()});return await r.json()}catch{return null}}
+
+function xpdf(id,n){const e=document.getElementById(id);if(!e)return;html2canvas(e,{scale:2,useCORS:true,backgroundColor:'#fff'}).then(c=>{const{jsPDF:J}=window.jspdf;const w=c.width*.264583,ht=c.height*.264583;const p=new J({orientation:w>ht?'l':'p',unit:'mm',format:[w,ht]});p.addImage(c.toDataURL('image/png'),'PNG',0,0,w,ht);p.save(n+'.pdf')})}
+
+function gpdf(g,showMons){
+  const sd=par(g.startDate),ed=par(g.endDate);
+  const nd=Math.round((ed-sd)/864e5)+1;
+  const days=Array.from({length:nd},(_,i)=>({date:addD(sd,i),str:fmt(addD(sd,i))}));
+  const d=document.createElement('div');
+  d.className='pdf-print-area';
+  let ht=`<h2>🌿 ${g.name}</h2><div class="pdf-meta">`;
+  ht+=`📍 ${g.origin} · 🏨 ${g.hotel} · 👥 ${g.numKids||'?'} alumnos · 👨‍🏫 ${g.numTeachers||'?'} profes<br>`;
+  ht+=`📅 ${sd.getDate()} ${MN[sd.getMonth()]} – ${ed.getDate()} ${MN[ed.getMonth()]} 2026`;
+  if(g.transport)ht+=`<br>🚌 ${g.transport}`;
+  if(g.monitors)ht+=`<br><span style="color:#1864ab">👤 Monitores: ${g.monitors}</span>`;
+  if(g.notes)ht+=`<br><span style="color:#d97706">📝 ${g.notes}</span>`;
+  ht+=`</div>`;
+  days.forEach(x=>{
+    ht+=`<div class="pdf-day-title">${DNF[x.date.getDay()]} ${x.date.getDate()} de ${MN[x.date.getMonth()]}</div>`;
+    const acts=g.activities[x.str]||[];
+    acts.forEach(a=>{const c=CM[a.type];if(!c)return;
+      ht+=`<div class="pdf-act"><div class="pdf-dot" style="background:${c.c}"></div><div>`;
+      ht+=`<div class="pdf-act-name">${c.i} ${a.label}${a.time?' <span class="pdf-act-time">'+a.time+'</span>':''}</div>`;
+      if(showMons&&a.monitors)ht+=`<div class="pdf-act-mons">👤 ${a.monitors}</div>`;
+      if(a.obs)ht+=`<div class="pdf-act-obs">📝 ${a.obs}</div>`;
+      ht+=`</div></div>`;
+    });
+  });
+  d.innerHTML=ht;document.body.appendChild(d);
+  html2canvas(d,{scale:2,backgroundColor:'#fff'}).then(c=>{
+    const{jsPDF:J}=window.jspdf;
+    // A4 vertical: 210x297mm
+    const pw=210,ph=297,margin=10;
+    const imgW=pw-margin*2,imgH=c.height*(imgW/c.width);
+    const pdf=new J({orientation:'p',unit:'mm',format:'a4'});
+    let y=margin;
+    if(imgH<=ph-margin*2){pdf.addImage(c.toDataURL('image/png'),'PNG',margin,y,imgW,imgH)}
+    else{
+      // Multi-page
+      const pageH=ph-margin*2;
+      const totalPages=Math.ceil(imgH/pageH);
+      for(let p=0;p<totalPages;p++){
+        if(p>0)pdf.addPage();
+        const srcY=p*pageH*(c.width/imgW);
+        const srcH=Math.min(pageH*(c.width/imgW),c.height-srcY);
+        const canvas2=document.createElement('canvas');
+        canvas2.width=c.width;canvas2.height=srcH;
+        const ctx=canvas2.getContext('2d');
+        ctx.drawImage(c,0,srcY,c.width,srcH,0,0,c.width,srcH);
+        const drawH=srcH*(imgW/c.width);
+        pdf.addImage(canvas2.toDataURL('image/png'),'PNG',margin,margin,imgW,drawH);
+      }
+    }
+    pdf.save(g.name+'.pdf');document.body.removeChild(d);
+  });
+}
+
+function makeSeed(){return[
+{id:"g01",name:"IES González Aguilar",origin:"Ayamonte",startDate:"2026-04-27",endDate:"2026-04-29",hotel:"Hotel Ciudad de Cazorla",numKids:23,numTeachers:2,organizer:"",phone:"",transport:"Autobús",notes:"",monitors:"",activities:{"2026-04-27":[mkA("llegada","13:00"),mkA("picnic_no"),mkA("visita"),mkA("frondosa"),mkA("escape"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-04-28":[mkA("desayuno","8:00"),mkA("piraguas","10:30"),mkA("picnic_si"),mkA("cinegetico","15:00"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-04-29":[mkA("desayuno","8:00"),mkA("multiaventura","9:30")]}},
+{id:"g02",name:"IES Fuente Juncal",origin:"Huelva",startDate:"2026-05-11",endDate:"2026-05-14",hotel:"Hotel Ciudad de Cazorla",numKids:70,numTeachers:4,organizer:"",phone:"",transport:"2 autobuses",notes:"",monitors:"",activities:{"2026-05-11":[mkA("llegada","13:00"),mkA("picnic_no"),mkA("trekking"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-05-12":[mkA("desayuno","8:00"),mkA("cinegetico","11:00"),mkA("picnic_si"),mkA("piraguas","15:30"),mkA("cerrada"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-05-13":[mkA("desayuno","8:00"),mkA("multiaventura","9:00"),mkA("almuerzo","14:30"),mkA("visita"),mkA("escape"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-05-14":[mkA("desayuno","8:00"),mkA("castillo","10:00"),mkA("frondosa","12:00"),mkA("almuerzo","14:00")]}},
+{id:"g03",name:"Liceo Europeo",origin:"Madrid",startDate:"2026-05-11",endDate:"2026-05-13",hotel:"Hotel Villa Turística",numKids:90,numTeachers:6,organizer:"",phone:"",transport:"2 autobuses",notes:"",monitors:"",activities:{"2026-05-11":[mkA("llegada","13:00"),mkA("picnic_no"),mkA("multiaventura","14:00"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-05-12":[mkA("desayuno","8:00"),mkA("piraguas","10:30"),mkA("picnic_si"),mkA("cinegetico","15:00"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-05-13":[mkA("desayuno","8:00"),mkA("visita"),mkA("llegada","11:00")]}},
+{id:"g04",name:"CEIP Sierra Arana",origin:"Iznalloz",startDate:"2026-05-18",endDate:"2026-05-21",hotel:"Hotel Ciudad de Cazorla",numKids:30,numTeachers:2,organizer:"",phone:"",transport:"",notes:"CARCESA Visita PN",monitors:"",activities:{"2026-05-18":[mkA("llegada"),mkA("picnic_si"),mkA("trekking"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-05-19":[mkA("desayuno","8:00"),mkA("piraguas","10:30"),mkA("cinegetico","15:00"),mkA("cerrada","19:30"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-05-20":[mkA("desayuno","8:00"),mkA("multiaventura","9:00"),mkA("almuerzo"),mkA("visita"),mkA("escape"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-05-21":[mkA("desayuno","8:00"),mkA("castillo","10:00"),mkA("frondosa","12:00")]}},
+{id:"g05",name:"Viajes Contreras",origin:"Alcaudete",startDate:"2026-05-18",endDate:"2026-05-20",hotel:"Hotel Ciudad de Cazorla",numKids:21,numTeachers:2,organizer:"",phone:"",transport:"",notes:"",monitors:"",activities:{"2026-05-18":[mkA("llegada","9:00"),mkA("multiaventura","9:30"),mkA("picnic_no"),mkA("visita"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-05-19":[mkA("desayuno","8:00"),mkA("piraguas","12:00"),mkA("picnic_si","14:00"),mkA("cinegetico","15:00"),mkA("cerrada"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-05-20":[mkA("desayuno","8:00"),mkA("castillo","10:00"),mkA("frondosa"),mkA("escape"),mkA("almuerzo","14:00")]}},
+{id:"g06",name:"Clara Campoamor",origin:"Almería",startDate:"2026-05-25",endDate:"2026-05-27",hotel:"Hotel Ciudad de Cazorla",numKids:50,numTeachers:2,organizer:"",phone:"",transport:"",notes:"",monitors:"",activities:{"2026-05-25":[mkA("llegada","9:00"),mkA("cerrada"),mkA("picnic_si"),mkA("piraguas","15:00"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-05-26":[mkA("desayuno","8:00"),mkA("multiaventura","9:30"),mkA("almuerzo","14:00"),mkA("trekking","16:00"),mkA("visita","18:00"),mkA("frondosa","19:00"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-05-27":[mkA("desayuno","8:00"),mkA("castillo","11:00"),mkA("escape"),mkA("almuerzo","14:00")]}},
+{id:"g07",name:"San Miguel Sevilla",origin:"Sevilla",startDate:"2026-05-27",endDate:"2026-05-29",hotel:"Hotel Ciudad de Cazorla",numKids:25,numTeachers:2,organizer:"",phone:"",transport:"",notes:"Piden que esté Rubén.",monitors:"Rubén",activities:{"2026-05-27":[mkA("llegada","9:00"),mkA("cinegetico","12:00"),mkA("picnic_si"),mkA("piraguas","16:00")],"2026-05-28":[mkA("desayuno","8:00"),mkA("multiaventura","9:30"),mkA("almuerzo","14:00"),mkA("trekking","16:00"),mkA("visita","18:00"),mkA("frondosa","19:00"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-05-29":[mkA("desayuno","8:00"),mkA("castillo","11:00"),mkA("escape"),mkA("almuerzo","14:00")]}},
+{id:"g08",name:"Humilladero",origin:"Humilladero",startDate:"2026-05-27",endDate:"2026-05-29",hotel:"Hotel Ciudad de Cazorla",numKids:45,numTeachers:3,organizer:"",phone:"",transport:"",notes:"",monitors:"",activities:{"2026-05-27":[mkA("llegada","9:00"),mkA("multiaventura","10:00"),mkA("almuerzo","14:30"),mkA("trekking","16:00"),mkA("visita","18:00"),mkA("frondosa","19:00"),mkA("aseo"),mkA("cena","21:00"),mkA("velada")],"2026-05-28":[mkA("desayuno","8:00"),mkA("piraguas","11:00"),mkA("picnic_si"),mkA("cinegetico","15:00"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-05-29":[mkA("desayuno"),mkA("baeza"),mkA("almuerzo"),mkA("baeza")]}},
+{id:"g09",name:"Interrias",origin:"Madrid",startDate:"2026-06-01",endDate:"2026-06-05",hotel:"Albergue",numKids:40,numTeachers:3,organizer:"",phone:"",transport:"",notes:"Monitor inglés",monitors:"",activities:{"2026-06-01":[mkA("llegada","13:00")],"2026-06-02":[mkA("desayuno","8:00"),mkA("multiaventura","9:30")],"2026-06-03":[mkA("desayuno","8:00"),mkA("cinegetico","12:00"),mkA("piraguas","16:00")],"2026-06-04":[mkA("desayuno","8:00")],"2026-06-05":[mkA("desayuno","8:00")]}},
+{id:"g10",name:"Gloria Fuertes",origin:"Granada",startDate:"2026-06-01",endDate:"2026-06-03",hotel:"Hotel Ciudad de Cazorla",numKids:44,numTeachers:3,organizer:"",phone:"",transport:"",notes:"",monitors:"",activities:{"2026-06-01":[mkA("llegada"),mkA("cerrada"),mkA("picnic_si"),mkA("piraguas","15:30"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-02":[mkA("desayuno","8:00"),mkA("castillo","11:00"),mkA("visita","12:00"),mkA("frondosa","13:00"),mkA("almuerzo","14:00"),mkA("trekking","16:00"),mkA("gymkana","18:00")],"2026-06-03":[mkA("desayuno","8:00"),mkA("multiaventura","9:30"),mkA("almuerzo","14:00")]}},
+{id:"g11",name:"Virgilio Fernández",origin:"Sevilla",startDate:"2026-06-02",endDate:"2026-06-05",hotel:"Hotel Ciudad de Cazorla",numKids:27,numTeachers:3,organizer:"",phone:"",transport:"",notes:"",monitors:"",activities:{"2026-06-02":[mkA("llegada"),mkA("paseo"),mkA("picnic_si"),mkA("trekking","16:00"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-03":[mkA("desayuno","8:00"),mkA("piraguas","11:00"),mkA("picnic_si"),mkA("cinegetico","15:00"),mkA("cerrada","19:00"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-04":[mkA("desayuno"),mkA("castillo","10:00"),mkA("visita","12:00"),mkA("almuerzo"),mkA("escape"),mkA("frondosa")],"2026-06-05":[mkA("desayuno","8:00"),mkA("multiaventura","9:30"),mkA("almuerzo")]}},
+{id:"g12",name:"Álvarez Sotomayor",origin:"Almería",startDate:"2026-06-03",endDate:"2026-06-05",hotel:"Hotel Ciudad de Cazorla",numKids:50,numTeachers:3,organizer:"",phone:"",transport:"",notes:"",monitors:"",activities:{"2026-06-03":[mkA("llegada","9:00"),mkA("cinegetico","12:00"),mkA("picnic_si"),mkA("cerrada"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-04":[mkA("desayuno","8:00"),mkA("multiaventura","9:30"),mkA("almuerzo","14:30"),mkA("trekking","16:00"),mkA("visita","18:00"),mkA("frondosa","19:00"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-05":[mkA("desayuno","8:00"),mkA("castillo","11:00"),mkA("escape","12:00"),mkA("almuerzo","14:00")]}},
+{id:"g13",name:"Salvador Allende",origin:"Málaga",startDate:"2026-06-08",endDate:"2026-06-10",hotel:"Hotel Ciudad de Cazorla",numKids:45,numTeachers:3,organizer:"",phone:"",transport:"",notes:"Gestionar autobús.",monitors:"",activities:{"2026-06-08":[mkA("llegada"),mkA("almuerzo","14:00"),mkA("trekking","17:00"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-09":[mkA("desayuno"),mkA("piraguas","10:30"),mkA("picnic_si"),mkA("cinegetico","15:00"),mkA("cerrada"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-10":[mkA("desayuno","8:00"),mkA("multiaventura","9:30")]}},
+{id:"g14",name:"Cole Loja",origin:"Loja",startDate:"2026-06-15",endDate:"2026-06-17",hotel:"Hotel Ciudad de Cazorla",numKids:38,numTeachers:3,organizer:"",phone:"",transport:"",notes:"",monitors:"",activities:{"2026-06-15":[mkA("llegada"),mkA("multiaventura"),mkA("almuerzo"),mkA("visita","18:00"),mkA("frondosa","19:00"),mkA("cena","21:00"),mkA("velada")],"2026-06-16":[mkA("desayuno","8:00"),mkA("barrancos","9:30"),mkA("almuerzo"),mkA("cerrada"),mkA("cena","21:00"),mkA("velada")],"2026-06-17":[mkA("desayuno","7:30"),mkA("cinegetico","10:00"),mkA("almuerzo"),mkA("rafting")]}},
+{id:"g15",name:"CEIP José Rodríguez",origin:"Sevilla",startDate:"2026-06-15",endDate:"2026-06-18",hotel:"Hotel Ciudad de Cazorla",numKids:40,numTeachers:3,organizer:"",phone:"",transport:"",notes:"",monitors:"",activities:{"2026-06-15":[mkA("llegada"),mkA("picnic_si"),mkA("trekking"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-16":[mkA("desayuno"),mkA("cerrada"),mkA("almuerzo"),mkA("cinegetico","15:00"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-17":[mkA("desayuno"),mkA("multiaventura"),mkA("almuerzo"),mkA("visita"),mkA("escape"),mkA("aseo"),mkA("cena"),mkA("velada")],"2026-06-18":[mkA("desayuno"),mkA("castillo","10:00"),mkA("frondosa","12:00"),mkA("almuerzo")]}},
+]}
+
+// ═══ COMPONENTS ═══
+function Login({onLogin}){const[pw,sp]=useState("");const[er,se]=useState("");
+  const go=()=>{if(pw==="cazorla2026")onLogin("admin");else if(pw==="cazorla")onLogin("viewer");else se("Clave incorrecta")};
+  return h('div',{className:'login-wrap'},h('div',{className:'login-card'},h('span',{className:'login-icon'},'🌿'),h('h1',null,'Cazorla Planning'),h('p',null,'Introduce la clave de acceso'),h('input',{className:'login-input',type:'password',value:pw,onChange:e=>{sp(e.target.value);se("")},onKeyDown:e=>e.key==='Enter'&&go(),placeholder:'••••••••',autoFocus:true}),h('button',{className:'login-btn',onClick:go},'Entrar'),er&&h('div',{className:'login-err'},er)))}
+
+function Picker({onClose,onAdd}){const[sl,ss]=useState({});const t=k=>ss(p=>{const n={...p};n[k]?delete n[k]:n[k]={time:""};return n});
+  return h('div',{className:'overlay',onClick:onClose},h('div',{className:'modal',onClick:e=>e.stopPropagation(),style:{maxWidth:560}},h('div',{className:'modal-head'},h('h3',null,'Añadir actividades'),h('button',{className:'modal-x',onClick:onClose},'✕')),h('div',{className:'modal-body'},["comida","rutina","act","exc"].map(g=>h('div',{key:g},h('div',{style:{fontSize:9,fontWeight:700,color:'var(--tx3)',textTransform:'uppercase',margin:'8px 0 3px'}},GN[g]),h('div',{className:'pick-grid'},CAT.filter(c=>c.g===g).map(c=>{const s=!!sl[c.k];return h('div',{key:c.k,className:'pick-item'+(s?' sel':''),onClick:()=>t(c.k),style:s?{borderColor:c.c,background:c.c+'08'}:{}},h('div',{className:'pick-dot',style:{background:c.c}},c.i),h('div',{className:'pick-label'},c.l),s&&h('input',{className:'pick-time',placeholder:'HH:MM',value:sl[c.k].time,onClick:e=>e.stopPropagation(),onChange:e=>ss(p=>({...p,[c.k]:{time:e.target.value}}))}))
+  }))))),h('div',{className:'modal-foot'},h('div',{style:{flex:1}}),h('button',{className:'btn',onClick:onClose},'Cancelar'),h('button',{className:'btn btn-green',disabled:!Object.keys(sl).length,onClick:()=>{onAdd(Object.entries(sl).map(([k,v])=>({id:uid(),type:k,time:v.time||"",label:CM[k]?.l||k,monitors:"",obs:""})));onClose()}},'Añadir'+(Object.keys(sl).length?' ('+Object.keys(sl).length+')':'')))))}
+
+function GForm({group,onClose,onSave,onDelete,ro}){const nw=!group;const[f,sf]=useState(group||{id:uid(),name:"",origin:"",startDate:"2026-04-27",endDate:"2026-04-29",hotel:HT[0],numKids:"",numTeachers:"",organizer:"",phone:"",transport:"",notes:"",monitors:"",activities:{}});const s=(k,v)=>sf(p=>({...p,[k]:v}));const I=(l,k,t,ph)=>h('div',{className:'field'},h('label',null,l),h(k==='notes'?'textarea':'input',{type:t||'text',value:f[k]||"",onChange:e=>s(k,e.target.value),placeholder:ph||"",readOnly:ro}));
+  return h('div',{className:'overlay',onClick:onClose},h('div',{className:'modal',onClick:e=>e.stopPropagation(),style:{maxWidth:500}},h('div',{className:'modal-head'},h('h3',null,nw?'Nuevo colegio':f.name),h('button',{className:'modal-x',onClick:onClose},'✕')),h('div',{className:'modal-body'},h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},I("Nombre","name","text","CEIP…"),I("Origen","origin","text","Ciudad")),h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},I("Llegada","startDate","date"),I("Salida","endDate","date")),h('div',{className:'field'},h('label',null,'Alojamiento'),h('select',{value:f.hotel,onChange:e=>s('hotel',e.target.value),disabled:ro,style:{width:'100%',padding:'9px 12px',border:'1px solid var(--bdr)',borderRadius:10,fontFamily:'inherit',fontSize:13,background:'var(--bg)'}},HT.map(x=>h('option',{key:x},x)))),h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},I("Nº niños","numKids","number"),I("Nº profes","numTeachers","number")),h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},I("Organizador","organizer"),I("Teléfono","phone","text","600…")),I("Transporte","transport","text","Autobús"),I("👤 Monitores","monitors","text","Nombres"),I("📝 Observaciones","notes","text","Notas…")),h('div',{className:'modal-foot'},!nw&&h('button',{className:'btn',onClick:()=>gpdf(f,true)},'📄 PDF'),!nw&&!ro&&h('button',{className:'btn btn-red',onClick:()=>{onDelete(f.id);onClose()}},'🗑'),h('div',{style:{flex:1}}),h('button',{className:'btn',onClick:onClose},ro?'Cerrar':'Cancelar'),!ro&&h('button',{className:'btn btn-green',onClick:()=>{if(!f.name.trim()){alert("Nombre obligatorio");return}onSave(f);onClose()}},nw?'Crear':'Guardar'))))}
+
+function EditAct({data,onClose,onSave,onRemove,ro}){if(!data)return null;const{act}=data;const c=CM[act.type];const[time,sT]=useState(act.time||"");const[label,sL]=useState(act.label||"");const[mons,sM]=useState(act.monitors||"");const[obs,sO]=useState(act.obs||"");
+  return h('div',{className:'overlay',onClick:onClose},h('div',{className:'modal',onClick:e=>e.stopPropagation(),style:{maxWidth:380}},h('div',{className:'modal-head'},h('h3',null,c?.i,' ',c?.l||act.type),h('button',{className:'modal-x',onClick:onClose},'✕')),h('div',{className:'modal-body'},h('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},h('div',{className:'field'},h('label',null,'Hora'),h('input',{value:time,onChange:e=>sT(e.target.value),placeholder:'HH:MM',readOnly:ro})),h('div',{className:'field'},h('label',null,'Etiqueta'),h('input',{value:label,onChange:e=>sL(e.target.value),readOnly:ro}))),h('div',{className:'field'},h('label',null,'👤 Monitores'),h('input',{value:mons,onChange:e=>sM(e.target.value),placeholder:'Juan, María',readOnly:ro})),h('div',{className:'field'},h('label',null,'📝 Observaciones'),h('textarea',{value:obs,onChange:e=>sO(e.target.value),placeholder:'Notas sobre esta actividad…',readOnly:ro,style:{minHeight:40}}))),h('div',{className:'modal-foot'},!ro&&h('button',{className:'btn btn-red',onClick:()=>{onRemove(data.gid,data.ds,act.id);onClose()}},'🗑'),h('div',{style:{flex:1}}),ro?h('button',{className:'btn',onClick:onClose},'Cerrar'):h('button',{className:'btn btn-green',onClick:()=>{onSave(data.gid,data.ds,act.id,{time,label,monitors:mons,obs});onClose()}},'Guardar'))))}
+
+function CardDetail({g,ro,onClose,onEdit,setPk,mA,rA,uA,setEa,showMons}){
+  const sd=par(g.startDate),ed=par(g.endDate);const nd=Math.round((ed-sd)/864e5)+1;
+  const days=Array.from({length:nd},(_,i)=>({date:addD(sd,i),str:fmt(addD(sd,i))}));
+  const[dragId,setDragId]=useState(null);const[dragDay,setDragDay]=useState(null);const[overAct,setOverAct]=useState(null);
+
+  useEffect(()=>{document.body.style.overflow='hidden';return()=>{document.body.style.overflow=''}},[]);
+
+  const handleDragStart=(actId,dayStr)=>{setDragId(actId);setDragDay(dayStr)};
+  const handleDragOver=(e,actId)=>{e.preventDefault();setOverAct(actId)};
+  const handleDrop=(e,targetActId,targetDay)=>{
+    e.preventDefault();setOverAct(null);
+    if(!dragId||!dragDay)return;
+    if(dragDay===targetDay){
+      // Reorder within same day
+      const acts=[...(g.activities[targetDay]||[])];
+      const fromIdx=acts.findIndex(a=>a.id===dragId);
+      const toIdx=acts.findIndex(a=>a.id===targetActId);
+      if(fromIdx===-1||toIdx===-1||fromIdx===toIdx){setDragId(null);return}
+      const[item]=acts.splice(fromIdx,1);acts.splice(toIdx,0,item);
+      // Use uA to rebuild entire day
+      uA(g.id,targetDay,null,{replaceDay:acts});
+    } else {
+      // Move between days
+      const srcActs=[...(g.activities[dragDay]||[])];
+      const tgtActs=[...(g.activities[targetDay]||[])];
+      const fromIdx=srcActs.findIndex(a=>a.id===dragId);
+      if(fromIdx===-1){setDragId(null);return}
+      const[item]=srcActs.splice(fromIdx,1);
+      const toIdx=tgtActs.findIndex(a=>a.id===targetActId);
+      tgtActs.splice(toIdx===-1?tgtActs.length:toIdx,0,item);
+      uA(g.id,dragDay,null,{replaceDay:srcActs});
+      uA(g.id,targetDay,null,{replaceDay:tgtActs});
+    }
+    setDragId(null);setDragDay(null);
+  };
+  const handleDragEnd=()=>{setDragId(null);setDragDay(null);setOverAct(null)};
+
+  return h('div',{className:'detail-overlay'},
+    h('div',{className:'detail-head'},h('div',{style:{flex:1}},h('h2',null,g.name),h('div',{className:'sub'},'📅 ',sd.getDate(),' ',MN[sd.getMonth()],' – ',ed.getDate(),' ',MN[ed.getMonth()],' · 👥 ',g.numKids||'?')),h('button',{className:'detail-close',onClick:onClose},'✕')),
+    h('div',{className:'detail-meta'},h('p',null,'📍 ',g.origin,' · 🏨 ',g.hotel,' · 👨‍🏫 ',g.numTeachers||'?',' profes'),g.transport&&h('p',null,'🚌 ',g.transport),g.monitors&&h('p',{className:'meta-blue'},'👤 Monitores: ',g.monitors),g.notes&&h('p',{className:'meta-amber'},'📝 ',g.notes),h('div',{className:'detail-meta-btns'},!ro&&h('button',{className:'btn',onClick:()=>{onClose();onEdit(g)}},'✏️ Editar'),h('button',{className:'btn',onClick:()=>gpdf(g,showMons)},'📄 PDF'))),
+    days.map(day=>{const acts=g.activities[day.str]||[];
+      return h('div',{key:day.str,className:'day-block'},
+        h('div',{className:'day-header'},h('span',{className:'day-num'},day.date.getDate()),h('span',{className:'day-name'},DNF[day.date.getDay()],' · ',MN[day.date.getMonth()])),
+        acts.map((a,i)=>{const c=CM[a.type];if(!c)return null;
+          const isDragging=dragId===a.id;const isOver=overAct===a.id;
+          return h('div',{key:a.id,className:'act-row'+(isDragging?' dragging':'')+(isOver?' drag-over':''),
+            draggable:!ro&&CAN_DRAG,
+            onDragStart:e=>{e.dataTransfer.effectAllowed='move';handleDragStart(a.id,day.str)},
+            onDragOver:e=>handleDragOver(e,a.id),
+            onDragLeave:()=>setOverAct(null),
+            onDrop:e=>handleDrop(e,a.id,day.str),
+            onDragEnd:handleDragEnd,
+            onClick:()=>setEa({gid:g.id,ds:day.str,act:a})},
+            h('div',{className:'act-icon',style:{background:c.c}},c.i),
+            h('div',{className:'act-body'},
+              h('div',{className:'act-name'},h('span',null,a.label),a.time&&h('span',{className:'act-time'},a.time)),
+              showMons&&a.monitors&&h('div',{className:'act-mons'},'👤 ',a.monitors),
+              a.obs&&h('div',{className:'act-row-obs'},'📝 ',a.obs)),
+            !ro&&h('div',{className:'act-btns'},
+              h('button',{className:'act-btn',disabled:i===0,onClick:e=>{e.stopPropagation();mA(g.id,day.str,a.id,-1)}},h('span',null,'▲')),
+              h('button',{className:'act-btn',disabled:i>=acts.length-1,onClick:e=>{e.stopPropagation();mA(g.id,day.str,a.id,1)}},h('span',null,'▼')),
+              h('button',{className:'act-btn del',onClick:e=>{e.stopPropagation();rA(g.id,day.str,a.id)}},h('span',null,'✕'))))}),
+        !ro&&h('div',{className:'add-act-btn',onClick:()=>setPk({gid:g.id,ds:day.str})},'+ Añadir actividad'))}))}
+
+// ═══ EXPORT / IMPORT ═══
+function exportJSON(G){
+  const blob=new Blob([JSON.stringify(G,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='cazorla_planning_'+fmt(new Date())+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function importJSON(file,onLoad){
+  const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d))throw new Error('No es un array');onLoad(d)}catch(e){alert('Archivo inválido: '+e.message)}};
+  r.readAsText(file);
+}
+
+// ═══ BACKUPS MODAL ═══
+function BackupsModal({onClose,onRestore,ro}){
+  const[list,setList]=useState(null);const[busy,setBusy]=useState(false);
+  useEffect(()=>{(async()=>{const j=await apiBackups();setList(j?.backups||[])})()},[]);
+  const fmt2=s=>{if(!s)return'';const d=new Date(s.replace(' ','T'));return d.toLocaleString('es-ES')};
+  return h('div',{className:'overlay',onClick:onClose},h('div',{className:'modal',onClick:e=>e.stopPropagation(),style:{maxWidth:560}},
+    h('div',{className:'modal-head'},h('h3',null,'🗂 Historial de copias de seguridad'),h('button',{className:'modal-x',onClick:onClose},'✕')),
+    h('div',{className:'modal-body'},
+      h('div',{className:'tip-text'},'Cada vez que guardas, el servidor crea una copia automática. Aquí puedes restaurar versiones anteriores. Las últimas 50 copias se conservan.'),
+      list===null&&h('div',{className:'bk-empty'},'Cargando…'),
+      list&&list.length===0&&h('div',{className:'bk-empty'},'No hay copias todavía.'),
+      list&&list.length>0&&h('div',{className:'bk-list'},list.map(b=>h('div',{key:b.id,className:'bk-row'},
+        h('div',{style:{flex:1}},
+          h('div',{className:'bk-when'},fmt2(b.created_at)),
+          h('div',{className:'bk-meta'},(b.groups||0)+' colegios · '+Math.round((b.size||0)/1024)+' KB',b.note?' · '+b.note:'')),
+        h('span',{className:'bk-tag'},'v'+b.version),
+        !ro&&h('button',{className:'btn',disabled:busy,onClick:async()=>{
+          if(!confirm('¿Restaurar esta versión? Se hará una copia de seguridad automática del estado actual antes.'))return;
+          setBusy(true);const r=await apiRestore(b.id);setBusy(false);
+          if(r?.ok){onRestore();onClose()}else{alert('Error al restaurar: '+(r?.error||'desconocido'))}
+        }},'Restaurar')
+      )))),
+    h('div',{className:'modal-foot'},h('div',{style:{flex:1}}),h('button',{className:'btn',onClick:onClose},'Cerrar'))));
+}
+
+// ═══ SETTINGS MODAL (token API) ═══
+function SettingsModal({onClose}){
+  const[tok,setTok]=useState(localStorage.getItem(LS_TOKEN)||"");
+  const save=()=>{if(tok)localStorage.setItem(LS_TOKEN,tok);else localStorage.removeItem(LS_TOKEN);onClose()};
+  return h('div',{className:'overlay',onClick:onClose},h('div',{className:'modal',onClick:e=>e.stopPropagation(),style:{maxWidth:420}},
+    h('div',{className:'modal-head'},h('h3',null,'⚙️ Ajustes'),h('button',{className:'modal-x',onClick:onClose},'✕')),
+    h('div',{className:'modal-body'},
+      h('div',{className:'tip-text'},'Si has configurado un ',h('code',null,'API_TOKEN'),' en ',h('code',null,'config.php'),', introdúcelo aquí para poder guardar cambios. Si no usas token, deja en blanco.'),
+      h('div',{className:'field'},h('label',null,'Token API'),h('input',{type:'password',value:tok,onChange:e=>setTok(e.target.value),placeholder:'Opcional'}))),
+    h('div',{className:'modal-foot'},h('div',{style:{flex:1}}),h('button',{className:'btn',onClick:onClose},'Cancelar'),h('button',{className:'btn btn-green',onClick:save},'Guardar'))));
+}
+
+// ═══ MORE SHEET (mobile overflow menu) ═══
+function MoreSheet({onClose,actions}){
+  return h('div',{className:'overlay',onClick:onClose},h('div',{className:'modal',onClick:e=>e.stopPropagation(),style:{maxWidth:480}},
+    h('div',{className:'modal-head'},h('h3',null,'Acciones'),h('button',{className:'modal-x',onClick:onClose},'✕')),
+    h('div',{className:'modal-body',style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},
+      actions.map(a=>a&&h('button',{
+        key:a.label,
+        className:'btn',
+        onClick:()=>{onClose();a.onClick()},
+        style:{flexDirection:'column',gap:4,padding:'14px 8px',minHeight:80,fontSize:12,fontWeight:600}
+      },h('span',{style:{fontSize:24}},a.icon),a.label)))));
+}
+
+// ═══ MAIN APP ═══
+function App({role}){
+  const ro=role==='viewer';
+  const[G,sG]=useState([]);const[ld,sLd]=useState(true);
+  const[dirty,setDirty]=useState(false);
+  const[installPrompt,setInstallPrompt]=useState(null);
+  const[canInstall,setCanInstall]=useState(false);const[installDismissed,setInstallDismissed]=useState(false);
+  useEffect(()=>{const handler=e=>{e.preventDefault();setInstallPrompt(e);setCanInstall(true)};window.addEventListener('beforeinstallprompt',handler);return()=>window.removeEventListener('beforeinstallprompt',handler)},[]);
+  const doInstall=async()=>{if(!installPrompt)return;installPrompt.prompt();const r=await installPrompt.userChoice;if(r.outcome==='accepted'){setCanInstall(false);setInstallPrompt(null)}};const[syncSt,sSs]=useState('saved');
+  const[saveErr,setSaveErr]=useState(null);
+  const[showBackups,setShowBackups]=useState(false);const[showSettings,setShowSettings]=useState(false);
+  const[showMore,setShowMore]=useState(false);
+  const savedSnap=useRef(null);const lastUp=useRef("");const pollSkip=useRef(false);
+  const importRef=useRef(null);
+
+  // Load: API → fallback localStorage cache; oferta de restauración si hay borrador local más reciente
+  useEffect(()=>{(async()=>{
+    const r=await apiLoad();
+    const local=readLocal();
+    if(r?.data.length>0){
+      sG(r.data);savedSnap.current=JSON.stringify(r.data);lastUp.current=r.updated;cacheLocal(r.data);
+      // Si hay borrador local distinto y posterior al servidor, ofrecer restaurar
+      if(!ro&&local&&local.ts&&JSON.stringify(local.data)!==JSON.stringify(r.data)){
+        const lt=new Date(local.ts),rt=new Date((r.updated||'').replace(' ','T'));
+        if(lt>rt&&confirm('Tienes cambios locales sin guardar de '+lt.toLocaleString('es-ES')+'. ¿Restaurarlos?')){
+          sG(local.data);
+        }
+      }
+    } else if(local){
+      sG(local.data);savedSnap.current=JSON.stringify(local.data);
+    } else {
+      const s=makeSeed();sG(s);savedSnap.current=JSON.stringify(s);cacheLocal(s);
+      if(!ro){const r2=await apiSave(s);if(r2.ok)lastUp.current=r2.updated||new Date().toISOString().replace('T',' ').slice(0,19)}
+    }
+    sLd(false)
+  })()},[]);
+
+  // Track dirty + cache local en cada cambio
+  useEffect(()=>{
+    if(ld||!savedSnap.current)return;
+    const cur=JSON.stringify(G);
+    const d=cur!==savedSnap.current;
+    setDirty(d);sSs(d?'unsaved':'saved');
+    cacheLocal(G); // siempre escribimos a localStorage para resistencia ante cierres accidentales
+  },[G,ld]);
+
+  // Aviso al cerrar pestaña con cambios sin guardar
+  useEffect(()=>{
+    const onBU=e=>{if(dirty){e.preventDefault();e.returnValue=''}};
+    window.addEventListener('beforeunload',onBU);
+    return()=>window.removeEventListener('beforeunload',onBU);
+  },[dirty]);
+
+  // Manual save
+  const doSave=useCallback(async()=>{
+    sSs('saving');pollSkip.current=true;setSaveErr(null);
+    const r=await apiSave(G);
+    if(r.ok){savedSnap.current=JSON.stringify(G);lastUp.current=r.updated||new Date().toISOString().replace('T',' ').slice(0,19);setDirty(false);sSs('saved');cacheLocal(G)}
+    else{sSs('error');setSaveErr(r.error||'Error desconocido')}
+    setTimeout(()=>{pollSkip.current=false},2000)
+  },[G]);
+
+  // Undo to last saved
+  const doUndo=useCallback(()=>{if(savedSnap.current){sG(JSON.parse(savedSnap.current));setDirty(false);sSs('saved')}},[]);
+
+  // Tras restaurar un backup desde el servidor: recargar
+  const reloadFromAPI=useCallback(async()=>{
+    const r=await apiLoad();
+    if(r?.data.length>0){sG(r.data);savedSnap.current=JSON.stringify(r.data);lastUp.current=r.updated;cacheLocal(r.data);setDirty(false);sSs('saved')}
+  },[]);
+
+  // Importar JSON desde archivo (sustituye en memoria; el usuario debe pulsar Guardar)
+  const doImport=useCallback(file=>{
+    importJSON(file,d=>{
+      if(!confirm('¿Reemplazar todos los grupos por los del archivo importado? Tendrás que pulsar Guardar para enviarlo al servidor.'))return;
+      sG(d);
+    });
+  },[]);
+
+  // Poll for remote changes (skip when dirty)
+  useEffect(()=>{if(ld)return;const t=setInterval(async()=>{if(pollSkip.current||dirty)return;const c=await apiCheck(lastUp.current);if(c?.changed){const r=await apiLoad();if(r?.data){pollSkip.current=true;sG(r.data);savedSnap.current=JSON.stringify(r.data);lastUp.current=r.updated;cacheLocal(r.data);setDirty(false);sSs('saved');setTimeout(()=>{pollSkip.current=false},1000)}}},5000);return()=>clearInterval(t)},[ld,dirty]);
+
+  // Start on cards view
+  const[vw,sVw]=useState("cards");const[fM,sFM]=useState("TODOS");const[fS,sFS]=useState("");
+  const[cw,sCw]=useState(fmt(getMon(new Date(2026,3,27))));const[cm,sCm]=useState({y:2026,m:3});
+  const[nD,sND]=useState(5);const[gM,sGM]=useState(null);const[pk,sPk]=useState(null);
+  const[drg,sDrg]=useState(null);const[drk,sDrk]=useState(null);const[si,sSi]=useState(false);const[ea,sEa]=useState(null);
+  const[oc,sOc]=useState(null);const[showMons,setShowMons]=useState(true);
+
+  const wd=useMemo(()=>{const m=par(cw);return Array.from({length:nD},(_,i)=>{const d=addD(m,i);return{date:d,str:fmt(d),dow:d.getDay(),dn:d.getDate(),mi:d.getMonth()}})},[cw,nD]);
+  const wl=useMemo(()=>{const f=wd[0].date,l=wd[wd.length-1].date;return f.getMonth()===l.getMonth()?`${f.getDate()}–${l.getDate()} ${MN[f.getMonth()]} ${f.getFullYear()}`:`${f.getDate()} ${MN[f.getMonth()]}–${l.getDate()} ${MN[l.getMonth()]} ${f.getFullYear()}`},[wd]);
+  const fl=useMemo(()=>G.filter(g=>{if(fM!=="TODOS"){const sm=par(g.startDate).getMonth();const mp={ABRIL:3,MAYO:4,JUNIO:5};if(sm!==mp[fM])return false}if(fS&&!g.name.toLowerCase().includes(fS.toLowerCase()))return false;return true}),[G,fM,fS]);
+  const wg=useMemo(()=>{const ws=wd[0].str,we=wd[wd.length-1].str;return fl.filter(g=>g.startDate<=we&&g.endDate>=ws)},[fl,wd]);
+  const st=useMemo(()=>({n:fl.length,k:fl.reduce((a,g)=>a+(parseInt(g.numKids)||0),0),ct:fl.reduce((a,g)=>{const s=par(g.startDate),e=par(g.endDate);return a+Math.round((e-s)/864e5)+1},0)}),[fl]);
+  const gcl=useMemo(()=>{const m={};G.forEach((g,i)=>{m[g.id]=GC[i%GC.length]});return m},[G]);
+  const mds=useMemo(()=>{const{y,m}=cm;const f=new Date(y,m,1);const l=new Date(y,m+1,0);const s=f.getDay()||7;const c=[];for(let i=1;i<s;i++)c.push(null);for(let d=1;d<=l.getDate();d++)c.push(new Date(y,m,d));return c},[cm]);
+  const mmp=useMemo(()=>{const m={};fl.forEach(g=>{const s=par(g.startDate),e=par(g.endDate);let d=new Date(s);while(d<=e){const k=fmt(d);if(!m[k])m[k]=[];m[k].push(g);d=addD(d,1)}});return m},[fl]);
+
+  const svG=useCallback(g=>sG(p=>{const e=p.find(x=>x.id===g.id);return e?p.map(x=>x.id===g.id?g:x):[...p,g]}),[]);
+  const dlG=useCallback(id=>{if(confirm("¿Eliminar?"))sG(p=>p.filter(g=>g.id!==id))},[]);
+  const aA=useCallback((gid,d,items)=>sG(p=>p.map(g=>{if(g.id!==gid)return g;const a={...g.activities};a[d]=[...(a[d]||[]),...items];return{...g,activities:a}})),[]);
+  const rA=useCallback((gid,d,aid)=>sG(p=>p.map(g=>{if(g.id!==gid)return g;const a={...g.activities};a[d]=(a[d]||[]).filter(x=>x.id!==aid);return{...g,activities:a}})),[]);
+  // Updated uA: supports both single-act update and full day replace (for drag reorder)
+  const uA=useCallback((gid,d,aid,upd)=>sG(p=>p.map(g=>{if(g.id!==gid)return g;const a={...g.activities};if(upd.replaceDay){a[d]=upd.replaceDay}else{a[d]=(a[d]||[]).map(x=>x.id===aid?{...x,...upd}:x)}return{...g,activities:a}})),[]);
+  const mA=useCallback((gid,d,aid,dir)=>sG(p=>p.map(g=>{if(g.id!==gid)return g;const a={...g.activities};const arr=[...(a[d]||[])];const idx=arr.findIndex(x=>x.id===aid);if(idx===-1)return g;const ni=idx+dir;if(ni<0||ni>=arr.length)return g;[arr[idx],arr[ni]]=[arr[ni],arr[idx]];a[d]=arr;return{...g,activities:a}})),[]);
+
+  // Planning grid drag
+  const oDS=(e,gid,d,aid)=>{if(ro)return;sDrg({gid,ds:d,aid});e.dataTransfer.effectAllowed="move"};
+  const oDO=e=>{if(ro)return;e.preventDefault()};const oDL=()=>sDrk(null);
+  const oDE=(e,gid,d)=>{if(ro)return;e.preventDefault();sDrk(`${gid}-${d}`)};
+  const oDR=(e,tg,td)=>{if(ro)return;e.preventDefault();sDrk(null);if(!drg)return;const{gid:sg,ds:sd,aid}=drg;sG(p=>{const ng=p.map(g=>({...g,activities:{...g.activities}}));const s=ng.find(g=>g.id===sg);const t=ng.find(g=>g.id===tg);if(!s||!t)return p;const sa=[...(s.activities[sd]||[])];const ai=sa.findIndex(x=>x.id===aid);if(ai===-1)return p;const[act]=sa.splice(ai,1);s.activities[sd]=sa;t.activities[td]=[...(t.activities[td]||[]),act];return ng});sDrg(null)};
+
+  const chip=(act,gid,d,idx,tot)=>{const c=CM[act.type];if(!c)return null;return h('div',{key:act.id,className:'chip-w',style:{background:c.c}},h('div',{className:'chip',draggable:!ro&&CAN_DRAG,onDragStart:e=>oDS(e,gid,d,act.id),onClick:e=>{e.stopPropagation();sEa({gid,ds:d,act})}},h('span',{className:'chip-icon'},c.i),act.time&&h('span',{className:'chip-time'},act.time),h('span',{className:'chip-label'},act.label),si&&act.monitors&&h('span',{className:'chip-mons'},'👤',act.monitors)),!ro&&h('div',{className:'chip-arrows'},h('button',{className:'chip-mv',disabled:idx===0,onClick:e=>{e.stopPropagation();mA(gid,d,act.id,-1)}},'▲'),h('button',{className:'chip-mv',disabled:idx>=tot-1,onClick:e=>{e.stopPropagation();mA(gid,d,act.id,1)}},'▼')),!ro&&h('button',{className:'chip-x',onClick:e=>{e.stopPropagation();rA(gid,d,act.id)}},'✕'))};
+
+  if(ld)return h('div',{className:'shell'},
+    h('div',{className:'top'},h('div',{className:'top-in'},h('div',{className:'logo'},h('span',{className:'logo-leaf'},'🌿'),'Cazorla',h('small',null,'2026')))),
+    h('div',{className:'skel-list'},Array.from({length:6},(_,i)=>h('div',{key:i,className:'skel skel-card'}))));
+
+  const ocData=oc?G.find(g=>g.id===oc):null;
+  const syncCls=syncSt==='saved'?'sync-saved':syncSt==='unsaved'?'sync-unsaved':syncSt==='saving'?'sync-saving':'sync-err';
+  const syncTxt=syncSt==='saved'?'✓ Guardado':syncSt==='unsaved'?'● Sin guardar':syncSt==='saving'?'Guardando…':'⚠ Error';
+
+  return h('div',{className:'shell'},
+    // TOP BAR
+    h('div',{className:'top'},h('div',{className:'top-in'},
+      h('div',{className:'logo'},h('span',{className:'logo-leaf'},'🌿'),'Cazorla',h('small',null,'2026')),
+      h('div',{className:'top-r'},
+        lastUp.current&&h('span',{className:'last-saved',title:'Última sincronización con el servidor'},'⏱ '+lastUp.current.slice(11,16)),
+        h('div',{className:'sync-pill '+syncCls,title:saveErr||''},h('span',{className:'sync-dot'}),syncTxt),
+        ro&&h('span',{className:'ro-badge'},'🔒 Solo lectura'),
+        !ro&&h('button',{className:'tt tt-g hide-mobile',onClick:()=>sGM('new')},'+ Colegio'),
+        h('button',{className:'ti hide-mobile'+(si?' on':''),onClick:()=>sSi(!si),title:'Ver detalles'},'👁'),
+        h('button',{className:'ti hide-mobile',onClick:()=>{if(vw==='week')xpdf('pdf-wk','Planning_'+wl);else if(vw==='month')xpdf('pdf-mo',MN[cm.m])},title:'PDF'},'📄'),
+        h('button',{className:'ti hide-mobile',onClick:()=>exportJSON(G),title:'Exportar copia local (JSON)'},'⬇'),
+        !ro&&h('button',{className:'ti hide-mobile',onClick:()=>importRef.current?.click(),title:'Importar JSON'},'⬆'),
+        h('input',{ref:importRef,type:'file',accept:'application/json',style:{display:'none'},onChange:e=>{const f=e.target.files?.[0];if(f)doImport(f);e.target.value=''}}),
+        h('button',{className:'ti hide-mobile',onClick:()=>setShowBackups(true),title:'Historial de copias'},'🗂'),
+        h('button',{className:'ti hide-mobile',onClick:()=>setShowSettings(true),title:'Ajustes'},'⚙'),
+        h('button',{className:'ti hide-mobile',onClick:()=>{if(dirty&&!confirm('Tienes cambios sin guardar. ¿Salir igualmente?'))return;sessionStorage.removeItem('cazorla_role');location.reload()},title:'Salir'},'🚪'),
+        h('button',{className:'ti show-mobile',onClick:()=>setShowMore(true),title:'Más'},'☰')))),
+
+    // FILTER BAR
+    h('div',{className:'fbar'},h('div',{className:'fbar-in'},
+      h('div',{className:'tabs'},["TODOS","ABRIL","MAYO","JUNIO"].map(m=>h('button',{key:m,className:'tab'+(fM===m?' on':''),onClick:()=>{sFM(m);if(m!=='TODOS'){const mm={ABRIL:3,MAYO:4,JUNIO:5};const firstDay=new Date(2026,mm[m],1);sCw(fmt(getMon(firstDay)));sCm({y:2026,m:mm[m]})}}},m==="TODOS"?"Todos":m[0]+m.slice(1).toLowerCase()))),
+      h('div',{className:'search-box'},h('input',{placeholder:'Buscar…',value:fS,onChange:e=>sFS(e.target.value)})),
+      h('div',{className:'spacer'}),
+      h('div',{className:'tabs view-tabs'},
+        h('button',{className:'tab'+(vw==='cards'?' on':''),onClick:()=>sVw('cards')},'Fichas'),
+        h('button',{className:'tab'+(vw==='week'?' on':''),onClick:()=>sVw('week')},'Planning'),
+        h('button',{className:'tab'+(vw==='month'?' on':''),onClick:()=>sVw('month')},'Mes')),
+      vw==='week'&&h('div',{className:'tabs'},
+        h('button',{className:'tab'+(nD===5?' on':''),onClick:()=>sND(5)},'L-V'),
+        h('button',{className:'tab'+(nD===7?' on':''),onClick:()=>sND(7)},'L-D')))),
+
+    // SAVE BAR (only when dirty)
+    dirty&&!ro&&h('div',{className:'save-bar-wrap'},h('div',{className:'save-bar'},
+      h('span',null,saveErr?'⚠️ Error al guardar: '+saveErr:'⚠️ Tienes cambios sin guardar (también se han guardado en este dispositivo)'),
+      h('button',{className:'save-btn save-btn-undo',onClick:doUndo},'↩ Deshacer'),
+      h('button',{className:'save-btn save-btn-ok',onClick:doSave},'💾 Guardar'))),
+
+    // MAIN
+    h('div',{className:'main'},
+      h('div',{className:'kpis'},[['🏫',st.n,'Colegios'],['👦',st.k,'Alumnos'],['📅',st.ct,'CazTrav']].map(([ic,v,l])=>h('div',{key:l,className:'kpi'},h('span',{className:'kpi-icon'},ic),h('div',null,h('div',{className:'kpi-val'},v),h('div',{className:'kpi-lbl'},l))))),
+
+      // CARDS VIEW
+      vw==='cards'&&h(F,null,
+        h('div',{className:'mons-toggle'},h('label',{onClick:()=>setShowMons(!showMons)},h('div',{className:'toggle-switch'+(showMons?' on':'')}),showMons?'Monitores visibles':'Monitores ocultos')),
+        h('div',{className:'cards',style:{marginTop:8}},fl.length===0&&h('div',{className:'empty-state'},h('div',{className:'es-icon'},'🔍'),'No hay colegios'),
+          fl.map(g=>{const sd2=par(g.startDate),ed2=par(g.endDate);const mc=gcl[g.id];
+            return h('div',{key:g.id,className:'card-row',onClick:()=>sOc(g.id)},
+              h('div',{className:'card-dot',style:{background:mc}}),
+              h('div',{style:{flex:1}},h('h3',null,g.name),h('div',{className:'sub'},'📅 ',sd2.getDate(),' ',MN[sd2.getMonth()],' – ',ed2.getDate(),' ',MN[ed2.getMonth()],' · 👥 ',g.numKids||'?'),si&&g.monitors&&h('div',{style:{fontSize:10,color:'var(--blue)',marginTop:2}},'👤 ',g.monitors)),
+              h('span',{className:'card-arrow'},'›'))}))),
+
+      // WEEK VIEW
+      vw==='week'&&h(F,null,
+        h('div',{className:'nav'},h('button',{className:'nav-btn',onClick:()=>sCw(fmt(addD(par(cw),-7)))},'◀'),h('h2',null,wl),h('button',{className:'nav-btn',onClick:()=>sCw(fmt(addD(par(cw),7)))},'▶')),
+        wg.length===0?h('div',{className:'empty-state'},h('div',{className:'es-icon'},'📭'),'No hay colegios'):
+        h('div',{id:'pdf-wk',className:'wk-wrap'},h('div',{className:'wk',style:{gridTemplateColumns:`130px repeat(${nD},minmax(100px,1fr))`}},
+          h('div',{className:'wk-corner'},h('span',null,'Colegio')),
+          wd.map(w=>h('div',{key:w.str,className:'wk-dh'+(w.dow===0||w.dow===6?' we':'')},h('div',{className:'d-day'},DN[w.dow]),h('div',{className:'d-num'},w.dn),h('div',{className:'d-mon'},MN[w.mi].slice(0,3)))),
+          wg.map(g=>h(F,{key:g.id},
+            h('div',{className:'wk-name','data-students':g.numKids||'?',onClick:()=>sOc(g.id)},h('div',{className:'n'},g.name),h('div',{className:'s'},'👥 ',g.numKids||'?'),si&&h('div',{className:'info'},g.monitors&&h('div',{className:'info-m'},'👤 ',g.monitors),g.notes&&h('div',{className:'info-n'},'📝 ',g.notes))),
+            wd.map(w=>{const ia=w.str>=g.startDate&&w.str<=g.endDate;const acts=g.activities[w.str]||[];const dky=`${g.id}-${w.str}`;
+              const dayLabel=DN[w.dow]+' '+w.dn+' '+MN[w.mi].slice(0,3);
+              return h('div',{key:w.str,className:'wk-cell'+(ia?'':' off')+(drk===dky?' drop':''),'data-day':dayLabel,onDragOver:oDO,onDragEnter:e=>ia&&oDE(e,g.id,w.str),onDragLeave:oDL,onDrop:e=>ia&&oDR(e,g.id,w.str)},
+                acts.map((a,i)=>chip(a,g.id,w.str,i,acts.length)),ia&&!ro&&h('div',{className:'add-slot',onClick:()=>sPk({gid:g.id,ds:w.str})},'+'))})))))),
+
+      // MONTH VIEW
+      vw==='month'&&h(F,null,
+        h('div',{className:'nav'},h('button',{className:'nav-btn',onClick:()=>sCm(p=>p.m===0?{y:p.y-1,m:11}:{...p,m:p.m-1})},'◀'),h('h2',null,MN[cm.m],' ',cm.y),h('button',{className:'nav-btn',onClick:()=>sCm(p=>p.m===11?{y:p.y+1,m:0}:{...p,m:p.m+1})},'▶')),
+        h('div',{id:'pdf-mo',className:'month-grid'},
+          ["LUN","MAR","MIÉ","JUE","VIE","SÁB","DOM"].map(d=>h('div',{key:d,className:'month-hdr'},d)),
+          mds.map((d,i)=>{if(!d)return h('div',{key:'e'+i,className:'month-cell empty'});const ds=fmt(d);const gs=mmp[ds]||[];
+            return h('div',{key:ds,className:'month-cell'},h('div',{className:'month-d'},d.getDate()),gs.map(g=>h('div',{key:g.id,className:'month-bar',style:{background:gcl[g.id]},onClick:()=>sOc(g.id)},g.name.length>12?g.name.slice(0,10)+'…':g.name)))})))
+    ),
+    // Fullscreen card detail
+    ocData&&h(CardDetail,{g:ocData,ro,onClose:()=>sOc(null),onEdit:g=>{sOc(null);sGM(g)},setPk:sPk,mA,rA,uA,setEa:sEa,showMons}),
+    gM&&h(GForm,{group:gM==='new'?null:gM,onClose:()=>sGM(null),onSave:svG,onDelete:dlG,ro}),
+    !ro&&pk&&h(Picker,{onClose:()=>sPk(null),onAdd:items=>{aA(pk.gid,pk.ds,items);sPk(null)}}),
+    h(EditAct,{data:ea,onClose:()=>sEa(null),onSave:uA,onRemove:rA,ro}),
+    showBackups&&h(BackupsModal,{onClose:()=>setShowBackups(false),onRestore:reloadFromAPI,ro}),
+    showSettings&&h(SettingsModal,{onClose:()=>setShowSettings(false)}),
+    showMore&&h(MoreSheet,{onClose:()=>setShowMore(false),actions:[
+      {icon:'👁',label:si?'Ocultar detalles':'Ver detalles',onClick:()=>sSi(!si)},
+      (vw==='week'||vw==='month')&&{icon:'📄',label:'PDF',onClick:()=>{if(vw==='week')xpdf('pdf-wk','Planning_'+wl);else xpdf('pdf-mo',MN[cm.m])}},
+      {icon:'⬇',label:'Exportar JSON',onClick:()=>exportJSON(G)},
+      !ro&&{icon:'⬆',label:'Importar JSON',onClick:()=>importRef.current?.click()},
+      {icon:'🗂',label:'Historial',onClick:()=>setShowBackups(true)},
+      {icon:'⚙',label:'Ajustes',onClick:()=>setShowSettings(true)},
+      {icon:'🚪',label:'Salir',onClick:()=>{if(dirty&&!confirm('Tienes cambios sin guardar. ¿Salir igualmente?'))return;sessionStorage.removeItem('cazorla_role');location.reload()}},
+    ]}),
+
+    // BOTTOM NAV (solo móvil — display via CSS)
+    h('nav',{className:'bnav'},
+      [['cards','📋','Fichas'],['week','🗓','Planning'],['month','📅','Mes']].map(([k,ic,l])=>
+        h('button',{key:k,className:'bnav-btn'+(vw===k?' on':''),onClick:()=>sVw(k)},
+          h('span',{className:'ic'},ic),l))),
+
+    // FAB (solo móvil — display via CSS)
+    !ro&&h('button',{className:'fab',onClick:()=>sGM('new'),title:'Nuevo colegio','aria-label':'Nuevo colegio'},'+'),
+    canInstall&&!installDismissed&&h('div',{className:'install-banner'},
+      h('div',{className:'ib-icon'},'📲'),
+      h('div',{className:'ib-text'},h('div',{className:'ib-title'},'Instalar Cazorla Planning'),h('div',{className:'ib-sub'},'Accede más rápido desde tu pantalla de inicio')),
+      h('button',{className:'ib-btn',onClick:doInstall},'Instalar App'),
+      h('button',{className:'ib-close',onClick:()=>setInstallDismissed(true)},'✕')));
+}
+
+function Root(){const[r,sR]=useState(()=>sessionStorage.getItem('cazorla_role')||null);
+  if(!r)return h(Login,{onLogin:v=>{sessionStorage.setItem('cazorla_role',v);sR(v)}});
+  return h(App,{role:r})}
+ReactDOM.render(h(Root),document.getElementById('app'));
+
+</script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});</script>
+</body>
+</html>
